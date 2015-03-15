@@ -24,13 +24,32 @@
         Average Rating: <%= docProfile.getAvgRating() %><br>
         Number of Reviews: <%= docProfile.getNumReviews() %><br><br>
         
-        Specializations:
+        Specializations:<br>
         <ul>
         <% for(Object o: specializations) {
             Specialization s = (Specialization)o;
         %>
             <li><%= s.getSpecializationName() %></li>
         <% } %>
+        </ul><br>
+        
+        Work Addresses:<br>
+        <% for(Object o: workAddresses) { 
+            WorkAddress w = (WorkAddress)o;
+        %>
+            Unit <%= w.getUnitNumber() %><br>
+            <%= w.getStreetNumber() %> <%= w.getStreetName() %><br>
+            <%= w.getCity() %>, <%= w.getProvince() %><br>
+            <%= w.getPostalCode() %><br>
+            <br>
+        <% } %>
+        
+        Review IDs:<br>
+        <ul>
+            <% for(Object o: reviewIDs) { %>
+                <li><a href="ReviewDetailServlet?rid=<%= (Integer)o %>"><%= (Integer)o %></a></li>
+            <% } %>
         </ul>
+        
     </body>
 </html>
