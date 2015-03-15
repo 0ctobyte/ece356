@@ -60,6 +60,44 @@ public class DBAO {
         return con;
     }
     
+    public static ArrayList<Integer> getReviewIDs(String doctor_alias)
+        throws ClassNotFoundException, SQLException, NamingException {
+        
+        
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ArrayList<Integer> ret = null;
+        
+        try {
+            con = getConnection();
+            String reviewIDQuery = "SELECT review_id FROM Review WHERE"
+                    + " doctor_alias = ? ORDER BY DATE DESC";
+            
+            pstmt = con.prepareStatement(reviewIDQuery);
+            pstmt.setString(1, doctor_alias);
+            
+            ResultSet resultSet;
+            resultSet = pstmt.executeQuery();
+            
+            if (!resultSet.first()) throw new RuntimeException("No Review IDs found for doctor with alias: " + doctor_alias);
+            
+            ret = new ArrayList<>();
+            while (resultSet.next()) {
+                ret.add(resultSet.getInt("Review.review_id"));
+            }
+            
+        } finally {
+            if (pstmt != null) {
+                pstmt.close();
+            }
+            if (con != null) {
+                con.close();
+            } 
+        }
+        
+        return ret;
+    }
+    
     public static ArrayList<WorkAddress> getWorkAddresses(String doctor_alias)
             throws ClassNotFoundException, SQLException, NamingException {
         
