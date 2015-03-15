@@ -60,6 +60,54 @@ public class DBAO {
         return con;
     }
     
+    public static ArrayList<WorkAddress> getWorkAddresses(String doctor_alias)
+            throws ClassNotFoundException, SQLException, NamingException {
+        
+        
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ArrayList<WorkAddress> ret = null;
+        
+        try {
+            con = getConnection();
+            String workAddressQuery = "SELECT unit_number, street_number,"
+                    + " street_name, postal_code, city, province FROM WorkAddress"
+                    + " NATURAL JOIN City WHERE doctor_alias = ?";
+            
+            pstmt = con.prepareStatement(workAddressQuery);
+            pstmt.setString(1, doctor_alias);
+            
+            ResultSet resultSet;
+            resultSet = pstmt.executeQuery();
+            
+            if (!resultSet.first()) throw new RuntimeException("No Adresses Found for doctor with alias: " + doctor_alias);
+            
+            ret = new ArrayList<>();
+            while (resultSet.next()) {
+                WorkAddress w = new WorkAddress
+                (
+                    resultSet.getString("WorkAddress.doctor_alias"),
+                    resultSet.getInt("WorkAddress.unit_number"),
+                    resultSet.getInt("WorkAddress.street_number"),
+                    resultSet.getString("WorkAddress.street_name"),
+                    resultSet.getString("WorkAddress.postal_code"),
+                    resultSet.getString("City.city"),
+                    resultSet.getString("City.province")
+                );
+                ret.add(w);
+            }
+        } finally {
+            if (pstmt != null) {
+                pstmt.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+        
+        return ret;
+    }
+    
     public static ArrayList<Specialization> getSpecializations(String doctor_alias)
             throws ClassNotFoundException, SQLException, NamingException {
         
@@ -74,16 +122,19 @@ public class DBAO {
             String specializationQuery = "SELECT specialization FROM Specialization WHERE Specialization.doctor_alias = ?";
             
             pstmt = con.prepareStatement(specializationQuery);
-            pstmt.setString(0, "doctor_alias");
+            pstmt.setString(1, "doctor_alias");
         
             ResultSet resultSet;
             resultSet = pstmt.executeQuery();
 
+            if (!resultSet.first()) throw new RuntimeException("No Specializations Found for doctor with alias: " + doctor_alias);
+            
             ret = new ArrayList<>();
             while (resultSet.next()) {
-                Specialization s = new Specialization(
-                    resultSet.getString("doctor_alias"),
-                    resultSet.getString("specialization_name")
+                Specialization s = new Specialization
+                (
+                    resultSet.getString("Specialization.doctor_alias"),
+                    resultSet.getString("Specialization.specialization_name")
                 );
                 ret.add(s);
             }
@@ -111,24 +162,25 @@ public class DBAO {
         try {
             con = getConnection();
             
-            String dopQuery = "SELECT * FROM DoctorOwnProfile WHERE user_alias = ?";
+            String dopQuery = "SELECT * FROM DoctorOwnProfileView WHERE user_alias = ?";
             
             pstmt = con.prepareStatement(dopQuery);
-            pstmt.setString(0, user_alias);
+            pstmt.setString(1, user_alias);
             
             ResultSet resultSet = pstmt.executeQuery();
             
-            if (!resultSet.first()) throw new RuntimeException();
+            if (!resultSet.first()) throw new RuntimeException("No Doctor Found with alias: " + user_alias);
+           
             
             dop = new DoctorOwnProfile(
-                    resultSet.getString("DoctorOwnProfile.user_alias"),
-                    resultSet.getString("DoctorOwnProfile.name_first"),
-                    resultSet.getString("DoctorOwnProfile.name_middle"),
-                    resultSet.getString("DoctorOwnProfile.name_last"),
-                    (resultSet.getString("DoctorOwnProfile.gender").equals("M")) ? DoctorOwnProfile.Gender.M : DoctorOwnProfile.Gender.F,
-                    resultSet.getInt("DoctorOwnProfile.num_years_licensed"),
-                    resultSet.getDouble("DoctorOwnProfile.avg_rating"),
-                    resultSet.getInt("DoctorOwnProfile.num_reviews")
+                    resultSet.getString("DoctorOwnProfileView.user_alias"),
+                    resultSet.getString("DoctorOwnProfileView.name_first"),
+                    resultSet.getString("DoctorOwnProfileView.name_middle"),
+                    resultSet.getString("DoctorOwnProfileView.name_last"),
+                    (resultSet.getString("DoctorOwnProfileView.gender").equals("M")) ? DoctorOwnProfile.Gender.M : DoctorOwnProfile.Gender.F,
+                    resultSet.getInt("DoctorOwnProfileView.num_years_licensed"),
+                    resultSet.getDouble("DoctorOwnProfileView.avg_rating"),
+                    resultSet.getInt("DoctorOwnProfileView.num_reviews")
             );
             
         } finally {
@@ -166,12 +218,13 @@ public class DBAO {
             String userLoginQuery = "SELECT * FROM User WHERE user_alias = ? AND password_hash = ?";
             pstmt = con.prepareStatement(userLoginQuery);
             
-            pstmt.setString(0, user_alias);
-            pstmt.setString(1, password_hash);
+            pstmt.setString(1, user_alias);
+            pstmt.setString(2, password_hash);
 
             ResultSet resultSet = pstmt.executeQuery();
+            
                         
-            if(!resultSet.first()) throw new RuntimeException();
+            if(!resultSet.first()) throw new RuntimeException("Cannot login user with alias: " + user_alias);
              
             u = new User(
                     resultSet.getString("User.user_alias"),
