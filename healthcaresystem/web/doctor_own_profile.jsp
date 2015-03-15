@@ -12,6 +12,11 @@
         <title>HealthCareSystem | Profile</title>
     </head>
     <body>
-        <h1>Hello World!</h1>
+        <jsp:useBean id="docProfile" class="ece356.DoctorOwnProfile"/>
+        Name: <%= docProfile.getFirstName() + " " + docProfile.getLastName() %>
+        Gender: <%= docProfile.getGender() %>
+        Years Licensed: <%= docProfile.getNumYearsLicensed() %>
+        Average Rating: <%= docProfile.getAvgRating() %>
+        Number of Reviews: <%= docProfile.getNumReviews() %>
     </body>
 </html>

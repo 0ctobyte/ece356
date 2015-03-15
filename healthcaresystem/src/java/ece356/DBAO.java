@@ -215,7 +215,7 @@ public class DBAO {
         try {
             con = getConnection();
                 
-            String userLoginQuery = "SELECT * FROM User WHERE user_alias = ? AND password_hash = ?";
+            String userLoginQuery = "SELECT * FROM User WHERE user_alias = ? AND password_hash = password(?)";
             pstmt = con.prepareStatement(userLoginQuery);
             
             pstmt.setString(1, user_alias);

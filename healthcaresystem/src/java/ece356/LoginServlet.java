@@ -37,25 +37,27 @@ public class LoginServlet extends HttpServlet {
             url = "/login_page.jsp";
         } else {
             String user_alias = request.getParameter("user_alias");
-            String password_hash = request.getParameter("user_pwd");
+            String password = request.getParameter("user_pwd");
             try {
-                if(user_alias.equals("") || password_hash.equals("")) {
-                    throw new RuntimeException();
+                if(user_alias.isEmpty() || password.isEmpty()) {
+                    throw new RuntimeException("user_alias and/or password_hash is empty");
                 }
                 
                 // loginUser throws runtime exception if user DNE
-                User user = DBAO.loginUser(user_alias, password_hash);
+                User user = DBAO.loginUser(user_alias, password);
+                request.getSession().setAttribute("user", user);
                 
                 if(user.getAccountType() == User.AccountType.Doctor) {
                     DoctorOwnProfile docProfile = DBAO.doctorOwnProfileView(user_alias);
-                    request.getSession().setAttribute("docProfile", docProfile);
+                    request.setAttribute("docProfile", docProfile);
                     url = "/doctor_own_profile.jsp";
                 } else {
-                    PatientOwnProfile patientProfile = DBAO.patientOwnProfileView(user_alias);
-                    request.getSession().setAttribute("patientProfile", patientProfile);
+                    //PatientOwnProfile patientProfile = DBAO.patientOwnProfileView(user_alias);
+                    //request.getSession().setAttribute("patientProfile", patientProfile);
                     url = "/patient_own_profile.jsp";
                 }
             } catch(Exception e) {
+                System.out.println(e.getMessage());
                 request.setAttribute("login_msg", "Invalid username or password");
                 url = "/login_page.jsp";
             }
