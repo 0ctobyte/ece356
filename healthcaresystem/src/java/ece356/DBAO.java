@@ -60,6 +60,51 @@ public class DBAO {
         return con;
     }
     
+    public static Review getReview(int review_id)
+            throws ClassNotFoundException, SQLException, NamingException {
+
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        Review r;
+
+        try {
+            con = getConnection();
+            String reviewQuery = "u.name_first, u.name_last, r.patient_alias,"
+                    + " r.star_rating, r.date, r.comments FROM Review as r"
+                    + " INNER JOIN User as u ON u.user_alias = r.doctor_alias"
+                    + " WHERE r.review_id = ?";
+
+            pstmt = con.prepareStatement(reviewQuery);
+            pstmt.setInt(1, review_id);
+
+            ResultSet resultSet;
+            resultSet = pstmt.executeQuery();
+
+            if (!resultSet.first()) {
+                throw new RuntimeException("No Reviews found with review ID: " + review_id);
+            }
+
+            r = new Review(
+                resultSet.getString("u.name_first"),
+                resultSet.getString("u.name_last"),
+                resultSet.getString("r.patient_alias"),
+                resultSet.getInt("r.star_rating"),
+                resultSet.getString("r.date"),
+                resultSet.getString("r.comments")
+            );
+
+        } finally {
+            if (pstmt != null) {
+                pstmt.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+        
+        return r;
+    }
+    
     public static ArrayList<Integer> getReviewIDs(String doctor_alias)
         throws ClassNotFoundException, SQLException, NamingException {
         
@@ -104,7 +149,7 @@ public class DBAO {
         
         Connection con = null;
         PreparedStatement pstmt = null;
-        ArrayList<WorkAddress> ret = new ArrayList<>();;
+        ArrayList<WorkAddress> ret = new ArrayList<>();
         
         try {
             con = getConnection();
@@ -151,7 +196,7 @@ public class DBAO {
         
         Connection con = null;
         PreparedStatement pstmt = null;
-        ArrayList<Specialization> ret = new ArrayList<>();;
+        ArrayList<Specialization> ret = new ArrayList<>();
                 
         try {
             
