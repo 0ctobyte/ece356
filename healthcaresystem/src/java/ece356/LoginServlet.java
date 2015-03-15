@@ -32,8 +32,17 @@ public class LoginServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        getServletContext().getRequestDispatcher("/patient_profile_own.jsp").forward(request, response);
-        //getServletContext().getRequestDispatcher("/doctor_profile_own.jsp").forward(request, response);
+        String url = "/index.jsp";
+        String queryID = request.getParameter("id");
+        if(queryID != null && queryID.equals("0")) {
+            url = "/login_page.jsp";
+        } else {
+            if(request.getParameter("user_alias").equals("")) {
+                request.setAttribute("login_msg", "Invalid username or password");
+                url = "/login_page.jsp";
+            }
+        }
+        getServletContext().getRequestDispatcher(url).forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
