@@ -10,9 +10,13 @@ package ece356;
  * @author sekharb
  */
 public class User {
+
+    User() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     public enum AccountType {
-        DOCTOR,
-        PATIENT
+        Doctor,
+        Patient
     }
     
     private String user_alias;
