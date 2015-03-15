@@ -66,7 +66,7 @@ public class DBAO {
         
         Connection con = null;
         PreparedStatement pstmt = null;
-        ArrayList<Integer> ret = null;
+        ArrayList<Integer> ret = new ArrayList<>();
         
         try {
             con = getConnection();
@@ -79,9 +79,9 @@ public class DBAO {
             ResultSet resultSet;
             resultSet = pstmt.executeQuery();
             
-            if (!resultSet.first()) throw new RuntimeException("No Review IDs found for doctor with alias: " + doctor_alias);
+            if (!resultSet.first()) return ret;
             
-            ret = new ArrayList<>();
+            resultSet.beforeFirst();
             while (resultSet.next()) {
                 ret.add(resultSet.getInt("Review.review_id"));
             }
@@ -104,7 +104,7 @@ public class DBAO {
         
         Connection con = null;
         PreparedStatement pstmt = null;
-        ArrayList<WorkAddress> ret = null;
+        ArrayList<WorkAddress> ret = new ArrayList<>();;
         
         try {
             con = getConnection();
@@ -118,13 +118,13 @@ public class DBAO {
             ResultSet resultSet;
             resultSet = pstmt.executeQuery();
             
-            if (!resultSet.first()) throw new RuntimeException("No Adresses Found for doctor with alias: " + doctor_alias);
+            if (!resultSet.first()) return ret;
             
-            ret = new ArrayList<>();
+            resultSet.beforeFirst();
             while (resultSet.next()) {
                 WorkAddress w = new WorkAddress
                 (
-                    resultSet.getString("WorkAddress.doctor_alias"),
+                    doctor_alias,
                     resultSet.getInt("WorkAddress.unit_number"),
                     resultSet.getInt("WorkAddress.street_number"),
                     resultSet.getString("WorkAddress.street_name"),
@@ -151,29 +151,30 @@ public class DBAO {
         
         Connection con = null;
         PreparedStatement pstmt = null;
-        ArrayList<Specialization> ret = null;
+        ArrayList<Specialization> ret = new ArrayList<>();;
                 
         try {
             
             con = getConnection();
             
-            String specializationQuery = "SELECT specialization FROM Specialization WHERE Specialization.doctor_alias = ?";
+            String specializationQuery = "SELECT specialization_name FROM Specialization WHERE Specialization.doctor_alias = ?";
             
             pstmt = con.prepareStatement(specializationQuery);
-            pstmt.setString(1, "doctor_alias");
+            pstmt.setString(1, doctor_alias);
         
             ResultSet resultSet;
             resultSet = pstmt.executeQuery();
 
-            if (!resultSet.first()) throw new RuntimeException("No Specializations Found for doctor with alias: " + doctor_alias);
+            if (!resultSet.first()) return ret;
             
-            ret = new ArrayList<>();
-            while (resultSet.next()) {
+            resultSet.beforeFirst();
+            while(resultSet.next()) {
                 Specialization s = new Specialization
                 (
-                    resultSet.getString("Specialization.doctor_alias"),
+                    doctor_alias,
                     resultSet.getString("Specialization.specialization_name")
                 );
+                
                 ret.add(s);
             }
         } finally {

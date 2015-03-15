@@ -6,6 +6,7 @@
 package ece356;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -49,13 +50,20 @@ public class LoginServlet extends HttpServlet {
                 
                 if(user.getAccountType() == User.AccountType.Doctor) {
                     DoctorOwnProfile docProfile = DBAO.doctorOwnProfileView(user_alias);
+                    ArrayList<Specialization> specializations = DBAO.getSpecializations(user_alias);
+                    ArrayList<WorkAddress> workAddresses = DBAO.getWorkAddresses(user_alias);
+                    ArrayList<Integer> reviewIDs = DBAO.getReviewIDs(user_alias);
                     request.setAttribute("docProfile", docProfile);
+                    request.setAttribute("specializations", specializations);
+                    request.setAttribute("workAddresses", workAddresses);
+                    request.setAttribute("reviewIDs", reviewIDs);
                     url = "/doctor_own_profile.jsp";
                 } else {
                     //PatientOwnProfile patientProfile = DBAO.patientOwnProfileView(user_alias);
                     //request.getSession().setAttribute("patientProfile", patientProfile);
                     url = "/patient_own_profile.jsp";
                 }
+                
             } catch(Exception e) {
                 System.out.println(e.getMessage());
                 request.setAttribute("login_msg", "Invalid username or password");
