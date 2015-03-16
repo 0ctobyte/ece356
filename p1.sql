@@ -51,14 +51,17 @@ insert into FriendRequest values ('aka_amazing', 's4bhatta', 0), ('rtakeuchi', '
 insert into Review(patient_alias, doctor_alias, star_rating, comments) values('s4bhatta', 'jreign', '5', 'He is a total bro! He makes youtube videos too WOOO!');
 
 /* Views */
-drop view if exists PatientFriendRequest;
+drop view if exists PatientFriendRequestView;
 create view PatientFriendRequestView as select f.patient_alias, f.friend_alias, u.email from User as u inner join FriendRequest as f on f.patient_alias=u.user_alias where accepted=0;
 
-drop view if exists PatientDoctorProfile;
+drop view if exists PatientDoctorProfileView;
 create view PatientDoctorProfileView as select u.user_alias, u.name_first, u.name_middle, u.name_last, d.gender, (year(current_timestamp)-d.license_year) as num_years_licensed, avg(r.star_rating-1) as avg_rating, count(distinct r.review_id) as num_reviews from (User as u inner join Doctor as d on u.user_alias=d.doctor_alias) left join Review as r on d.doctor_alias=r.doctor_alias group by u.user_alias;
 
-drop view if exists DoctorOwnProfile;
-create view DoctorOwnProfileView as select u.user_alias, u.name_first, u.name_middle, u.name_last, d.gender, (year(current_timestamp)-d.license_year) as num_years_licensed, avg(r.star_rating-1) as avg_rating, count(distinct r.review_id) as num_reviews from (User as u inner join Doctor as d on u.user_alias=d.doctor_alias) left join Review as r on d.doctor_alias=r.doctor_alias group by u.user_alias;
+drop view if exists DoctorOwnProfileView;
+create view DoctorOwnProfileView as select u.user_alias, u.email, u.name_first, u.name_middle, u.name_last, d.gender, (year(current_timestamp)-d.license_year) as num_years_licensed, avg(r.star_rating-1) as avg_rating, count(distinct r.review_id) as num_reviews from (User as u inner join Doctor as d on u.user_alias=d.doctor_alias) left join Review as r on d.doctor_alias=r.doctor_alias group by u.user_alias;
+
+drop view if exists PatientOwnProfileView;
+create view PatientOwnProfileView as select p.patient_alias, u.name_first, u.name_middle, u.name_last, c.city, c.province from (User as u inner join Patient as p on u.user_alias=p.patient_alias) natural join City as c;
 
 /* data operations */
 

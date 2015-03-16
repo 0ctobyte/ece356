@@ -59,8 +59,8 @@ public class LoginServlet extends HttpServlet {
                     request.setAttribute("reviewIDs", reviewIDs);
                     url = "/doctor_own_profile.jsp";
                 } else {
-                    //PatientOwnProfile patientProfile = DBAO.patientOwnProfileView(user_alias);
-                    //request.getSession().setAttribute("patientProfile", patientProfile);
+                    PatientOwnProfile patientProfile = DBAO.patientOwnProfileView(user_alias);
+                    request.getSession().setAttribute("patientProfile", patientProfile);
                     url = "/patient_own_profile.jsp";
                 }
                 

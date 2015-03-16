@@ -10,5 +10,43 @@ package ece356;
  * @author sekharb
  */
 public class PatientOwnProfile {
+    public String patient_alias;
+    public String name_first;
+    public String name_middle;
+    public String name_last;
+    public String city;
+    public String province;
     
+    public PatientOwnProfile(String patient_alias, String name_first, String name_middle, String name_last, String city, String province) {
+        this.patient_alias = patient_alias;
+        this.name_first = name_first;
+        this.name_middle = name_middle;
+        this.name_last = name_last;
+        this.city = city;
+        this.province = province;
+    }
+    
+    public String getPatientAlias() {
+        return this.patient_alias;
+    }
+    
+    public String getFirstName() {
+        return this.name_first;
+    }
+    
+    public String getMiddleName() {
+        return this.name_middle;
+    }
+    
+    public String getLastName() {
+        return this.name_last;
+    }
+    
+    public String getCity() {
+        return this.city;
+    }
+    
+    public String getProvince() {
+        return this.province;
+    }
 }
