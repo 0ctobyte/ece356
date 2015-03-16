@@ -23,6 +23,6 @@ public class FriendRequest {
     }
     
     public String getEmail() {
-        return this.getEmail();
+        return this.email;
     }
 }

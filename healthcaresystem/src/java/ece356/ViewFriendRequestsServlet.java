@@ -6,6 +6,7 @@
 package ece356;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -32,7 +33,7 @@ public class ViewFriendRequestsServlet extends HttpServlet {
         String user_alias = request.getParameter("user_alias");
         try {
             ArrayList<FriendRequest> friendRequests = DBAO.getFriendRequests(user_alias);
-            request.setAttribute("friendRequests", friendRequest);
+            request.setAttribute("friendRequests", friendRequests);
             url = "/view_friend_requests.jsp";
         } catch(Exception e) {
             System.out.println(e.getMessage());
