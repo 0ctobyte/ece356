@@ -278,7 +278,16 @@ public class DBAO {
         
         return dop;
     }
+    /*
+    *        public String patient_alias;
+    public String email;
+    public String name_first;
+    public String name_middle;
+    public String name_last;
+    public String city;
+    public String province;
     
+    */
     public static PatientOwnProfile patientOwnProfileView(String user_alias)
         throws ClassNotFoundException, SQLException, NamingException {
         Connection con = null;
@@ -301,7 +310,13 @@ public class DBAO {
             }
 
             pop = new PatientOwnProfile(
-
+                resultSet.getString("PatientOwnProfileView.patient_alias"),
+                resultSet.getString("PatientOwnProfileView.email"),
+                resultSet.getString("PatientOwnProfileView.name_first"),
+                resultSet.getString("PatientOwnProfileView.name_middle"),
+                resultSet.getString("PatientOwnProfileView.name_last"),
+                resultSet.getString("PatientOwnProfileView.city"),
+                resultSet.getString("PatientOwnProfileView.province")
             );
 
         } finally {
