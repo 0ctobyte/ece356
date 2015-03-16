@@ -59,7 +59,7 @@ public class DBAO {
         }
         return con;
     }
-    
+        
     public static Review getReview(int review_id)
             throws ClassNotFoundException, SQLException, NamingException {
 
@@ -246,7 +246,7 @@ public class DBAO {
         try {
             con = getConnection();
             
-            String dopQuery = "SELECT * FROM DoctorOwnProfileView WHERE user_alias = ?";
+            String dopQuery = "SELECT * FROM DoctorOwnProfileView WHERE doctor_alias = ?";
             
             pstmt = con.prepareStatement(dopQuery);
             pstmt.setString(1, user_alias);
@@ -256,7 +256,7 @@ public class DBAO {
             if (!resultSet.first()) throw new RuntimeException("No Doctor Found with alias: " + user_alias);
            
             dop = new DoctorOwnProfile(
-                    resultSet.getString("DoctorOwnProfileView.user_alias"),
+                    resultSet.getString("DoctorOwnProfileView.doctor_alias"),
                     resultSet.getString("DoctorOwnProfileView.email"),
                     resultSet.getString("DoctorOwnProfileView.name_first"),
                     resultSet.getString("DoctorOwnProfileView.name_middle"),
@@ -298,7 +298,7 @@ public class DBAO {
         try {
             con = getConnection();
 
-            String popQuery = "SELECT * FROM PatientOwnProfileView WHERE user_alias = ?";
+            String popQuery = "SELECT * FROM PatientOwnProfileView WHERE patient_alias = ?";
 
             pstmt = con.prepareStatement(popQuery);
             pstmt.setString(1, user_alias);
