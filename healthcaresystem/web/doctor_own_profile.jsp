@@ -19,6 +19,7 @@
         <jsp:useBean id="workAddresses" class="java.util.ArrayList" scope="request"/>
         <jsp:useBean id="reviewIDs" class="java.util.ArrayList" scope="request"/>
         Name: <%= docProfile.getFirstName() + " " + docProfile.getLastName() %><br>
+        Email: <%= docProfile.getEmail() %><br>
         Gender: <%= docProfile.getGender() %><br>
         Years Licensed: <%= docProfile.getNumYearsLicensed() %><br>
         Average Rating: <%= docProfile.getAvgRating() %><br>
