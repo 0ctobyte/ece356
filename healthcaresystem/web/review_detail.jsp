@@ -22,11 +22,11 @@
         <br>
         <%= review.getComments() %><br>
         <br>
-        <% if(next_rid > 0) { %>
-            <a href="ReviewDetailServlet?rid=<%=next_rid%>">next</a>
-        <% } %>
         <% if(prev_rid > 0) { %>
             <a href="ReviewDetailServlet?rid=<%=prev_rid%>">prev</a>
+        <% } %>
+        <% if(next_rid > 0) { %>
+            <a href="ReviewDetailServlet?rid=<%=next_rid%>">next</a>
         <% } %>
     </body>
 </html>

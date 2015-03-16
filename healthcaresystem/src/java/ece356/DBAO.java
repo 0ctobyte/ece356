@@ -72,7 +72,8 @@ public class DBAO {
             String reviewQuery = "SELECT r.review_id FROM (SELECT doctor_alias,"
                     + " date FROM Review WHERE review_id = ?) AS rd"
                     + " INNER JOIN Review as r ON rd.doctor_alias = r.doctor_alias"
-                    + " WHERE r.date > rd.date HAVING MAX(r.date)";
+                    + " WHERE r.date > rd.date"
+                    + " ORDER BY r.date ASC LIMIT 1";
 
             pstmt = con.prepareStatement(reviewQuery);
             pstmt.setInt(1, review_id);
@@ -109,7 +110,7 @@ public class DBAO {
                     + " review_id, date FROM Review WHERE review_id = ?) AS rd"
                     + " INNER JOIN Review as r ON rd.doctor_alias = r.doctor_alias"
                     + " WHERE r.date <= rd.date AND r.review_id != rd.review_id"
-                    + " HAVING MAX(r.date)";
+                    + " ORDER BY r.date DESC LIMIT 1";
 
             pstmt = con.prepareStatement(reviewQuery);
             pstmt.setInt(1, review_id);
