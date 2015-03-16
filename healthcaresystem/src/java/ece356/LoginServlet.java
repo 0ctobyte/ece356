@@ -60,7 +60,7 @@ public class LoginServlet extends HttpServlet {
                     url = "/doctor_own_profile.jsp";
                 } else {
                     PatientOwnProfile patientProfile = DBAO.patientOwnProfileView(user_alias);
-                    request.getSession().setAttribute("patientProfile", patientProfile);
+                    request.setAttribute("patientProfile", patientProfile);
                     url = "/patient_own_profile.jsp";
                 }
                 
