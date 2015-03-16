@@ -59,6 +59,83 @@ public class DBAO {
         }
         return con;
     }
+
+    public static Integer getNextReview(int review_id)
+            throws ClassNotFoundException, SQLException, NamingException {
+
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        Integer r;
+
+        try {
+            con = getConnection();
+            String reviewQuery = "SELECT r.review_id FROM (SELECT doctor_alias,"
+                    + " date FROM Review WHERE review_id = ?) AS rd"
+                    + " INNER JOIN Review as r ON rd.doctor_alias = r.doctor_alias"
+                    + " WHERE r.date > rd.date HAVING MAX(r.date)";
+
+            pstmt = con.prepareStatement(reviewQuery);
+            pstmt.setInt(1, review_id);
+
+            ResultSet resultSet;
+            resultSet = pstmt.executeQuery();
+
+            if (!resultSet.first()) {
+                throw new RuntimeException("No Reviews found with review ID: " + review_id);
+            }
+
+            r = resultSet.getInt("r.review_id");
+
+        } finally {
+            if (pstmt != null) {
+                pstmt.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+
+        return r;
+    }    
+
+    public static Integer getPreviousReview(int review_id)
+            throws ClassNotFoundException, SQLException, NamingException {
+        
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        Integer r;
+        
+        try {
+            con = getConnection();
+            String reviewQuery = "SELECT r.review_id FROM (SELECT doctor_alias,"
+                    + " review_id, date FROM Review WHERE review_id = ?) AS rd"
+                    + " INNER JOIN Review as r ON rd.doctor_alias = r.doctor_alias"
+                    + " WHERE r.date <= rd.date AND r.review_id != rd.review_id"
+                    + " HAVING MAX(r.date)";
+
+            pstmt = con.prepareStatement(reviewQuery);
+            pstmt.setInt(1, review_id);
+
+            ResultSet resultSet;
+            resultSet = pstmt.executeQuery();
+
+            if (!resultSet.first()) {
+                throw new RuntimeException("No Reviews found with review ID: " + review_id);
+            }
+
+            r = resultSet.getInt("r.review_id");
+
+        } finally {
+            if (pstmt != null) {
+                pstmt.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+
+        return r;
+    }
         
     public static Review getReview(int review_id)
             throws ClassNotFoundException, SQLException, NamingException {
