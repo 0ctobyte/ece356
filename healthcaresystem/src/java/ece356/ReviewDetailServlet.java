@@ -35,6 +35,8 @@ public class ReviewDetailServlet extends HttpServlet {
             if(rid <= 0) throw new RuntimeException("Review ID out of range");
             Review review = DBAO.getReview(rid);
             request.setAttribute("review", review);
+            request.setAttribute("next_rid", DBAO.getNextReview(rid));
+            request.setAttribute("prev_rid", DBAO.getPreviousReview(rid));
             url = "/review_detail.jsp";
         } catch(Exception e) {
             System.err.println(e.getMessage());

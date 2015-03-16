@@ -80,9 +80,7 @@ public class DBAO {
             ResultSet resultSet;
             resultSet = pstmt.executeQuery();
 
-            if (!resultSet.first()) {
-                throw new RuntimeException("No Reviews found with review ID: " + review_id);
-            }
+            if (!resultSet.first()) return 0;
 
             r = resultSet.getInt("r.review_id");
 
@@ -119,9 +117,7 @@ public class DBAO {
             ResultSet resultSet;
             resultSet = pstmt.executeQuery();
 
-            if (!resultSet.first()) {
-                throw new RuntimeException("No Reviews found with review ID: " + review_id);
-            }
+            if (!resultSet.first()) return 0;
 
             r = resultSet.getInt("r.review_id");
 

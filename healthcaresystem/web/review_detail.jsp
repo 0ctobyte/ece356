@@ -13,11 +13,20 @@
     </head>
     <body>
         <jsp:useBean id="review" class="ece356.Review" scope="request"/>
+        <% Integer next_rid = (Integer)request.getAttribute("next_rid"); %>
+        <% Integer prev_rid = (Integer)request.getAttribute("prev_rid"); %>
         <h1>Review Detail</h1>
         <%= review.getFirstName() + " " + review.getLastName() %><br>
         Rating: <%= review.getStarRating() %><br>
         By <%= review.getPatientAlias() %> on <%= review.getDate() %><br>
         <br>
-        <%= review.getComments() %>
+        <%= review.getComments() %><br>
+        <br>
+        <% if(next_rid > 0) { %>
+            <a href="ReviewDetailServlet?rid=<%=next_rid%>">next</a>
+        <% } %>
+        <% if(prev_rid > 0) { %>
+            <a href="ReviewDetailServlet?rid=<%=prev_rid%>">prev</a>
+        <% } %>
     </body>
 </html>
