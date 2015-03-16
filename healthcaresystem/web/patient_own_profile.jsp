@@ -25,6 +25,12 @@
                     View friend requests
                 </a>
             </li>
+            <li>
+                <a href="/patient_search_form.jsp">Patient search</a>
+            </li>
+            <li>
+                <a href="/doctor_search_form.jsp">Doctor search</a>
+            </li>
         </ul>
         
     </body>
