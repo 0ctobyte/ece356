@@ -10,13 +10,13 @@ package ece356;
  * @author sekharb
  */
 public class PatientOwnProfile {
-    public String patient_alias;
-    public String email;
-    public String name_first;
-    public String name_middle;
-    public String name_last;
-    public String city;
-    public String province;
+    private String patient_alias;
+    private String email;
+    private String name_first;
+    private String name_middle;
+    private String name_last;
+    private String city;
+    private String province;
     
     public PatientOwnProfile(String patient_alias, String email, String name_first, String name_middle, String name_last, String city, String province) {
         this.patient_alias = patient_alias;

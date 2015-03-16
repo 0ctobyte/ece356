@@ -36,7 +36,7 @@ public class ViewFriendRequestsServlet extends HttpServlet {
             request.setAttribute("friendRequests", friendRequests);
             url = "/view_friend_requests.jsp";
         } catch(Exception e) {
-            System.out.println(e.getMessage());
+            System.err.println(e.getMessage());
         }
         getServletContext().getRequestDispatcher(url).forward(request, response);
     }

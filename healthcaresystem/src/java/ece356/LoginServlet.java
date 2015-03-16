@@ -65,7 +65,7 @@ public class LoginServlet extends HttpServlet {
                 }
                 
             } catch(Exception e) {
-                System.out.println(e.getMessage());
+                System.err.println(e.getMessage());
                 request.setAttribute("login_msg", "Invalid username or password");
                 url = "/login_page.jsp";
             }

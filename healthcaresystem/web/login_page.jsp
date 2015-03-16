@@ -13,6 +13,7 @@
     </head>
     <body>
         <% String login_msg = (String)request.getAttribute("login_msg"); %>
+        <h1>Login</h1>
         <form name="login_form" action="LoginServlet" method="POST">
             Username: <input type="text" name="user_alias" value="" /><br>
             Password: <input type="password" name="user_pwd" value="" /><br>

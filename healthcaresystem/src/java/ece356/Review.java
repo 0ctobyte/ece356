@@ -10,12 +10,12 @@ package ece356;
  * @author sekharb
  */
 public class Review {
-    public String name_first;
-    public String name_last;
-    public String patient_alias;
-    public Integer star_rating;
-    public String date;
-    public String comments;
+    private String name_first;
+    private String name_last;
+    private String patient_alias;
+    private Integer star_rating;
+    private String date;
+    private String comments;
     
     public Review(String name_first, String name_last, String patient_alias, Integer star_rating, String date, String comments) {
         this.name_first = name_first;

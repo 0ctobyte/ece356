@@ -11,13 +11,13 @@ package ece356;
  * @author sekharb
  */
 public class WorkAddress {
-    public String doctor_alias;
-    public Integer unit_number;
-    public Integer street_number;
-    public String street_name;
-    public String postal_code;
-    public String city;
-    public String province;
+    private String doctor_alias;
+    private Integer unit_number;
+    private Integer street_number;
+    private String street_name;
+    private String postal_code;
+    private String city;
+    private String province;
     
     public WorkAddress(String doctor_alias, Integer unit_number, Integer street_number, String street_name, String postal_code, String city, String province) {
         this.doctor_alias = doctor_alias;

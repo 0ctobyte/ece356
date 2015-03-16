@@ -69,7 +69,7 @@ public class DBAO {
 
         try {
             con = getConnection();
-            String reviewQuery = "u.name_first, u.name_last, r.patient_alias,"
+            String reviewQuery = "SELECT u.name_first, u.name_last, r.patient_alias,"
                     + " r.star_rating, r.date, r.comments FROM Review as r"
                     + " INNER JOIN User as u ON u.user_alias = r.doctor_alias"
                     + " WHERE r.review_id = ?";

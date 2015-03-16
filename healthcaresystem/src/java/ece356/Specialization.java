@@ -10,8 +10,8 @@ package ece356;
  * @author sekharb
  */
 public class Specialization {
-    public String doctor_alias;
-    public String specialization_name;
+    private String doctor_alias;
+    private String specialization_name;
     
     public Specialization(String doctor_alias, String specialization_name) {
         this.doctor_alias = doctor_alias;

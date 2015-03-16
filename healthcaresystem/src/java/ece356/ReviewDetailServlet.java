@@ -28,9 +28,17 @@ public class ReviewDetailServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String url = "/review_detail.jsp";
-        String rid = request.getParameter("rid");
-        System.err.println(rid);
+        String url = "/index.jsp";
+        String s_rid = request.getParameter("rid");
+        try {
+            Integer rid = Integer.parseInt(s_rid);
+            if(rid <= 0) throw new RuntimeException("Review ID out of range");
+            Review review = DBAO.getReview(rid);
+            request.setAttribute("review", review);
+            url = "/review_detail.jsp";
+        } catch(Exception e) {
+            System.err.println(e.getMessage());
+        }
         getServletContext().getRequestDispatcher(url).forward(request, response);
     }
 

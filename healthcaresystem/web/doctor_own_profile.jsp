@@ -18,6 +18,7 @@
         <jsp:useBean id="specializations" class="java.util.ArrayList" scope="request"/>
         <jsp:useBean id="workAddresses" class="java.util.ArrayList" scope="request"/>
         <jsp:useBean id="reviewIDs" class="java.util.ArrayList" scope="request"/>
+        <h1>Profile</h1>
         <%= doctorProfile.getDoctorAlias() %><br>
         Name: <%= doctorProfile.getFirstName() + " " + doctorProfile.getLastName() %><br>
         Email: <%= doctorProfile.getEmail() %><br>

@@ -10,8 +10,8 @@ package ece356;
  * @author sekharb
  */
 public class FriendRequest {
-    public String patient_alias;
-    public String email;
+    private String patient_alias;
+    private String email;
     
     public FriendRequest(String patient_alias, String email) {
         this.patient_alias = patient_alias;
