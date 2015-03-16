@@ -105,6 +105,46 @@ public class DBAO {
         return r;
     }
     
+    public static ArrayList<FriendRequest> getFriendRequests(String patient_alias)
+            throws ClassNotFoundException, SQLException, NamingException {
+        
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ArrayList<FriendRequest> ret = new ArrayList<>();
+        
+        try {
+            con = getConnection();
+            String friendRequestQuery = "SELECT patient_alias, email"
+                    + " FROM PatientFriendRequestView WHERE friend_alias = ?";
+                    
+            pstmt = con.prepareStatement(friendRequestQuery);
+            pstmt.setString(1, patient_alias);
+            
+            ResultSet resultSet;
+            resultSet = pstmt.executeQuery();
+            
+            if (!resultSet.first()) return ret;
+            
+            resultSet.beforeFirst();
+            while (resultSet.next()) {
+                FriendRequest f = new FriendRequest(
+                        resultSet.getString("patient_alias"),
+                        resultSet.getString("email")
+                );
+                ret.add(f);
+            }
+        } finally {
+            if (pstmt != null) {
+                pstmt.close();
+            }
+            if (con != null) {
+                con.close();
+            }            
+        }
+        
+        return ret;
+    }
+    
     public static ArrayList<Integer> getReviewIDs(String doctor_alias)
         throws ClassNotFoundException, SQLException, NamingException {
         
