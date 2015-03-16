@@ -53,7 +53,7 @@ public class LoginServlet extends HttpServlet {
                     ArrayList<Specialization> specializations = DBAO.getSpecializations(user_alias);
                     ArrayList<WorkAddress> workAddresses = DBAO.getWorkAddresses(user_alias);
                     ArrayList<Integer> reviewIDs = DBAO.getReviewIDs(user_alias);
-                    request.setAttribute("docProfile", docProfile);
+                    request.setAttribute("doctorProfile", docProfile);
                     request.setAttribute("specializations", specializations);
                     request.setAttribute("workAddresses", workAddresses);
                     request.setAttribute("reviewIDs", reviewIDs);

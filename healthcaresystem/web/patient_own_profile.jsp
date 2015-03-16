@@ -12,6 +12,20 @@
         <title>HealthCareSystem | Profile</title>
     </head>
     <body>
-        <h1>Profile</h1>
+        <jsp:useBean id="patientProfile" class="ece356.PatientOwnProfile" scope="request"/>
+        <%= patientProfile.getPatientAlias() %><br>
+        Name: <%= patientProfile.getFirstName() + " " + patientProfile.getLastName() %><br>
+        Email: <%= patientProfile.getEmail() %><br>
+        Location: <%= patientProfile.getCity() + ", " + patientProfile.getProvince() %><br>
+        <br>
+        
+        <ul>
+            <li>
+                <a href="ViewFriendRequestsServlet?user_alias=<%=patientProfile.getPatientAlias()%>">
+                    View friend requests
+                </a>
+            </li>
+        </ul>
+        
     </body>
 </html>

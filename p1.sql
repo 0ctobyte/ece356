@@ -58,7 +58,7 @@ drop view if exists PatientDoctorProfileView;
 create view PatientDoctorProfileView as select u.user_alias, u.name_first, u.name_middle, u.name_last, d.gender, (year(current_timestamp)-d.license_year) as num_years_licensed, avg(r.star_rating-1) as avg_rating, count(distinct r.review_id) as num_reviews from (User as u inner join Doctor as d on u.user_alias=d.doctor_alias) left join Review as r on d.doctor_alias=r.doctor_alias group by u.user_alias;
 
 drop view if exists DoctorOwnProfileView;
-create view DoctorOwnProfileView as select u.user_alias, u.email, u.name_first, u.name_middle, u.name_last, d.gender, (year(current_timestamp)-d.license_year) as num_years_licensed, avg(r.star_rating-1) as avg_rating, count(distinct r.review_id) as num_reviews from (User as u inner join Doctor as d on u.user_alias=d.doctor_alias) left join Review as r on d.doctor_alias=r.doctor_alias group by u.user_alias;
+create view DoctorOwnProfileView as select d.doctor_alias, u.email, u.name_first, u.name_middle, u.name_last, d.gender, (year(current_timestamp)-d.license_year) as num_years_licensed, avg(r.star_rating-1) as avg_rating, count(distinct r.review_id) as num_reviews from (User as u inner join Doctor as d on u.user_alias=d.doctor_alias) left join Review as r on d.doctor_alias=r.doctor_alias group by d.doctor_alias;
 
 drop view if exists PatientOwnProfileView;
 create view PatientOwnProfileView as select p.patient_alias, u.email, u.name_first, u.name_middle, u.name_last, c.city, c.province from (User as u inner join Patient as p on u.user_alias=p.patient_alias) natural join City as c;

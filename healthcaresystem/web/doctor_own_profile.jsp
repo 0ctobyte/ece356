@@ -14,16 +14,17 @@
         <title>HealthCareSystem | Profile</title>
     </head>
     <body>
-        <jsp:useBean id="docProfile" class="ece356.DoctorOwnProfile" scope="request"/>
+        <jsp:useBean id="doctorProfile" class="ece356.DoctorOwnProfile" scope="request"/>
         <jsp:useBean id="specializations" class="java.util.ArrayList" scope="request"/>
         <jsp:useBean id="workAddresses" class="java.util.ArrayList" scope="request"/>
         <jsp:useBean id="reviewIDs" class="java.util.ArrayList" scope="request"/>
-        Name: <%= docProfile.getFirstName() + " " + docProfile.getLastName() %><br>
-        Email: <%= docProfile.getEmail() %><br>
-        Gender: <%= docProfile.getGender() %><br>
-        Years Licensed: <%= docProfile.getNumYearsLicensed() %><br>
-        Average Rating: <%= docProfile.getAvgRating() %><br>
-        Number of Reviews: <%= docProfile.getNumReviews() %><br><br>
+        <%= doctorProfile.getDoctorAlias() %><br>
+        Name: <%= doctorProfile.getFirstName() + " " + doctorProfile.getLastName() %><br>
+        Email: <%= doctorProfile.getEmail() %><br>
+        Gender: <%= doctorProfile.getGender() %><br>
+        Years Licensed: <%= doctorProfile.getNumYearsLicensed() %><br>
+        Average Rating: <%= doctorProfile.getAvgRating() %><br>
+        Number of Reviews: <%= doctorProfile.getNumReviews() %><br><br>
         
         Specializations:<br>
         <ul>
