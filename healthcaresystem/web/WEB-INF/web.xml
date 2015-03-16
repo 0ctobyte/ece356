@@ -12,6 +12,14 @@
         <servlet-name>ViewFriendRequestsServlet</servlet-name>
         <servlet-class>ece356.ViewFriendRequestsServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>DoctorProfileServlet</servlet-name>
+        <servlet-class>ece356.DoctorProfileServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>PatientProfileServlet</servlet-name>
+        <servlet-class>ece356.PatientProfileServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/LoginServlet</url-pattern>
@@ -23,6 +31,14 @@
     <servlet-mapping>
         <servlet-name>ViewFriendRequestsServlet</servlet-name>
         <url-pattern>/ViewFriendRequestsServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DoctorProfileServlet</servlet-name>
+        <url-pattern>/DoctorProfileServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PatientProfileServlet</servlet-name>
+        <url-pattern>/PatientProfileServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

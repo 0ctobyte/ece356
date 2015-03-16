@@ -14,6 +14,7 @@
     </head>
     <body>
         <jsp:useBean id="friendRequests" class="java.util.ArrayList" scope="request"/>
+        <jsp:useBean id="user" class="ece356.User" scope="session"/>
         <h1>Friend Requests</h1>
         <% for(Object o: friendRequests) { 
             FriendRequest fr = (FriendRequest)o;
@@ -23,5 +24,9 @@
                 Confirm
             </a><br>
         <% } %>
+        <br>
+        <a href="PatientProfileServlet?patient_alias=<%=user.getUserAlias()%>">
+            Profile
+        </a>
     </body>
 </html>

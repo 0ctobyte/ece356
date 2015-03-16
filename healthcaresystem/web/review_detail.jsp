@@ -13,6 +13,7 @@
     </head>
     <body>
         <jsp:useBean id="review" class="ece356.Review" scope="request"/>
+        <jsp:useBean id="user" class="ece356.User" scope="session"/>
         <% Integer next_rid = (Integer)request.getAttribute("next_rid"); %>
         <% Integer prev_rid = (Integer)request.getAttribute("prev_rid"); %>
         <h1>Review Detail</h1>
@@ -28,5 +29,9 @@
         <% if(next_rid > 0) { %>
             <a href="ReviewDetailServlet?rid=<%=next_rid%>">next</a>
         <% } %>
+        <br>
+        <a href="DoctorProfileServlet?doctor_alias=<%=user.getUserAlias()%>">
+            Profile
+        </a>
     </body>
 </html>

@@ -349,7 +349,7 @@ public class DBAO {
     }
     
     
-    public static DoctorOwnProfile doctorOwnProfileView(String user_alias)
+    public static DoctorOwnProfile doctorOwnProfileView(String doctor_alias)
             throws ClassNotFoundException, SQLException, NamingException {
         
         Connection con = null;
@@ -363,11 +363,11 @@ public class DBAO {
             String dopQuery = "SELECT * FROM DoctorOwnProfileView WHERE doctor_alias = ?";
             
             pstmt = con.prepareStatement(dopQuery);
-            pstmt.setString(1, user_alias);
+            pstmt.setString(1, doctor_alias);
             
             ResultSet resultSet = pstmt.executeQuery();
             
-            if (!resultSet.first()) throw new RuntimeException("No Doctor Found with alias: " + user_alias);
+            if (!resultSet.first()) throw new RuntimeException("No Doctor Found with alias: " + doctor_alias);
            
             dop = new DoctorOwnProfile(
                     resultSet.getString("DoctorOwnProfileView.doctor_alias"),
@@ -402,7 +402,7 @@ public class DBAO {
     public String province;
     
     */
-    public static PatientOwnProfile patientOwnProfileView(String user_alias)
+    public static PatientOwnProfile patientOwnProfileView(String patient_alias)
         throws ClassNotFoundException, SQLException, NamingException {
         Connection con = null;
         PreparedStatement pstmt = null;
@@ -415,12 +415,12 @@ public class DBAO {
             String popQuery = "SELECT * FROM PatientOwnProfileView WHERE patient_alias = ?";
 
             pstmt = con.prepareStatement(popQuery);
-            pstmt.setString(1, user_alias);
+            pstmt.setString(1, patient_alias);
 
             ResultSet resultSet = pstmt.executeQuery();
 
             if (!resultSet.first()) {
-                throw new RuntimeException("No Patient Found with alias: " + user_alias);
+                throw new RuntimeException("No Patient Found with alias: " + patient_alias);
             }
 
             pop = new PatientOwnProfile(

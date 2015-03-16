@@ -6,20 +6,16 @@
 package ece356;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
-import org.mindrot.jbcrypt.BCrypt;
-
 /**
  *
  * @author sekharb
  */
-public class LoginServlet extends HttpServlet {
+public class PatientProfileServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -33,31 +29,13 @@ public class LoginServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String url = "/index.jsp";
-        String queryID = request.getParameter("id");
-        if(queryID != null && queryID.equals("0")) {
-            url = "/login_page.jsp";
-        } else {
-            String user_alias = request.getParameter("user_alias");
-            String password = request.getParameter("user_pwd");
-            try {
-                if(user_alias.isEmpty() || password.isEmpty()) {
-                    throw new RuntimeException("user_alias and/or password_hash is empty");
-                }
-                
-                // loginUser throws runtime exception if user DNE
-                User user = DBAO.loginUser(user_alias, password);
-                request.getSession().setAttribute("user", user);
-                
-                if(user.getAccountType() == User.AccountType.Doctor) {
-                    url = "/DoctorProfileServlet?doctor_alias="+user.getUserAlias();
-                } else {
-                    url = "/PatientProfileServlet?patient_alias="+user.getUserAlias();
-                }
-            } catch(Exception e) {
-                System.err.println(e.getMessage());
-                request.setAttribute("login_msg", "Invalid username or password");
-                url = "/login_page.jsp";
-            }
+        String patient_alias = request.getParameter("patient_alias");
+        try {
+            PatientOwnProfile patientProfile = DBAO.patientOwnProfileView(patient_alias);
+            request.setAttribute("patientProfile", patientProfile);
+            url = "/patient_own_profile.jsp";
+        } catch(Exception e) {
+            System.err.println(e.getMessage());
         }
         getServletContext().getRequestDispatcher(url).forward(request, response);
     }
