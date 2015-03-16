@@ -255,9 +255,9 @@ public class DBAO {
             
             if (!resultSet.first()) throw new RuntimeException("No Doctor Found with alias: " + user_alias);
            
-            
             dop = new DoctorOwnProfile(
                     resultSet.getString("DoctorOwnProfileView.user_alias"),
+                    resultSet.getString("DoctorOwnProfileView.email"),
                     resultSet.getString("DoctorOwnProfileView.name_first"),
                     resultSet.getString("DoctorOwnProfileView.name_middle"),
                     resultSet.getString("DoctorOwnProfileView.name_last"),
@@ -280,10 +280,40 @@ public class DBAO {
     }
     
     public static PatientOwnProfile patientOwnProfileView(String user_alias)
-    {
-        
-        
-        return null;
+        throws ClassNotFoundException, SQLException, NamingException {
+        Connection con = null;
+        PreparedStatement pstmt = null;
+
+        PatientOwnProfile pop;
+
+        try {
+            con = getConnection();
+
+            String popQuery = "SELECT * FROM PatientOwnProfileView WHERE user_alias = ?";
+
+            pstmt = con.prepareStatement(popQuery);
+            pstmt.setString(1, user_alias);
+
+            ResultSet resultSet = pstmt.executeQuery();
+
+            if (!resultSet.first()) {
+                throw new RuntimeException("No Patient Found with alias: " + user_alias);
+            }
+
+            pop = new PatientOwnProfile(
+
+            );
+
+        } finally {
+            if (pstmt != null) {
+                pstmt.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+
+        return pop;
     }
     
     

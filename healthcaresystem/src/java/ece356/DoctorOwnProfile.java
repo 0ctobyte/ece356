@@ -16,6 +16,7 @@ public class DoctorOwnProfile {
     }
     
     private String user_alias;
+    private String email;
     private String name_first;
     private String name_middle;
     private String name_last;
@@ -24,8 +25,9 @@ public class DoctorOwnProfile {
     private Double avg_rating;
     private Integer num_reviews;
     
-    public DoctorOwnProfile(String user_alias, String name_first, String name_middle, String name_last, Gender gender, Integer num_years_licensed, Double avg_rating, Integer num_reviews) {
+    public DoctorOwnProfile(String user_alias, String email, String name_first, String name_middle, String name_last, Gender gender, Integer num_years_licensed, Double avg_rating, Integer num_reviews) {
         this.user_alias = user_alias;
+        this.email = email;
         this.name_first = name_first;
         this.name_middle = name_middle;
         this.name_last = name_last;
@@ -37,6 +39,10 @@ public class DoctorOwnProfile {
     
     public String getUserAlias() {
         return this.user_alias;
+    }
+    
+    public String getEmail() {
+        return this.email;
     }
     
     public String getFirstName() {
