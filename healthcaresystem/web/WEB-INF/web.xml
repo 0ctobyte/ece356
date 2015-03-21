@@ -20,6 +20,10 @@
         <servlet-name>PatientProfileServlet</servlet-name>
         <servlet-class>ece356.PatientProfileServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>AddFriendServlet</servlet-name>
+        <servlet-class>ece356.AddFriendServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/LoginServlet</url-pattern>
@@ -39,6 +43,10 @@
     <servlet-mapping>
         <servlet-name>PatientProfileServlet</servlet-name>
         <url-pattern>/PatientProfileServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddFriendServlet</servlet-name>
+        <url-pattern>/AddFriendServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
