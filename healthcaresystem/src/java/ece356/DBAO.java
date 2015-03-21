@@ -109,7 +109,7 @@ public class DBAO {
             String confirmFriendRequestUpdate = "UPDATE FriendRequest"
                     + " SET accepted = 1"
                     + " WHERE (patient_alias = ? AND friend_alias = ?)"
-                    + " OR (patient_alias = ? AND friend_alias = ?";
+                    + " OR (patient_alias = ? AND friend_alias = ?)";
             
             pstmt = con.prepareStatement(confirmFriendRequestUpdate);
             pstmt.setString(1, patient_alias);
