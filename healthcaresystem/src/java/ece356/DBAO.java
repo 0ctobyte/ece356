@@ -117,12 +117,7 @@ public class DBAO {
             pstmt.setString(3, friend_alias);
             pstmt.setString(4, patient_alias);
             
-            ResultSet resultSet;
-            resultSet = pstmt.executeQuery();
-            
-            if (!resultSet.first()) {
-                throw new RuntimeException("Unable to add friend " + friend_alias + " for " + patient_alias);
-            }
+            pstmt.executeUpdate();
             
         } finally {
             if (pstmt != null) {
