@@ -95,7 +95,41 @@ public class DBAO {
         }
 
         return r;
-    }    
+    }  
+    
+    
+    public static void confirmFriendRequest(String patient_alias, String friend_alias)
+            throws ClassNotFoundException, SQLException, NamingException {
+        
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        
+        try {
+            con = getConnection();
+            String confirmFriendRequestUpdate = "UPDATE FriendRequest"
+                    + " SET accepted = 1"
+                    + " WHERE patient_alias = ? AND friend_alias = ?";
+            
+            pstmt = con.prepareStatement(confirmFriendRequestUpdate);
+            pstmt.setString(1, patient_alias);
+            pstmt.setString(2, friend_alias);
+            
+            ResultSet resultSet;
+            resultSet = pstmt.executeQuery();
+            
+            if (!resultSet.first()) {
+                throw new RuntimeException("Unable to add friend " + friend_alias + " for " + patient_alias);
+            }
+            
+        } finally {
+            if (pstmt != null) {
+                pstmt.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+    }
 
     public static Integer getPreviousReview(int review_id)
             throws ClassNotFoundException, SQLException, NamingException {
