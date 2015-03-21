@@ -34,6 +34,10 @@ public class ViewFriendRequestsServlet extends HttpServlet {
         try {
             ArrayList<FriendRequest> friendRequests = DBAO.getFriendRequests(user_alias);
             request.setAttribute("friendRequests", friendRequests);
+            if(friendRequests.isEmpty()) {
+                String nofr_msg = "You have no friend requests!";
+                request.setAttribute("nofr_msg", nofr_msg);
+            }
             url = "/view_friend_requests.jsp";
         } catch(Exception e) {
             System.err.println(e.getMessage());
