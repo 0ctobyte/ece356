@@ -1,2 +1,4 @@
 .DS_Store
 healthcaresystem/build/
+healthcaresystem/dist/
+healthcaresystem/nbproject/private/
