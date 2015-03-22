@@ -35,9 +35,9 @@ public class ConfirmFriendServlet extends HttpServlet {
         User user = (User)request.getSession().getAttribute("user");
         try {
             DBAO.confirmFriendRequest(user.getUserAlias(), friend_alias);
-            String confirm_msg = "You are now friends with " + friend_alias + "!";
-            request.setAttribute("confirm_msg", confirm_msg);
             if(id == 0) {
+                String confirm_msg = "You are now friends with " + friend_alias + "!";
+                request.setAttribute("confirm_msg", confirm_msg);
                 url = "/ViewFriendRequestsServlet";
             } else {
                 ArrayList<PatientSearch> ps = (ArrayList<PatientSearch>)request.getSession().getAttribute("patientSearchResults");

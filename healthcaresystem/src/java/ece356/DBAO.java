@@ -104,8 +104,8 @@ public class DBAO {
         
         try {
             con = getConnection();
-            String confirmFriendRequestUpdate = "UPDATE FriendRequest"
-                    + " SET accepted = 0, patient_alias = ?, friend_alias = ?";
+            String confirmFriendRequestUpdate = "INSERT INTO FriendRequest"
+                    + " VALUES (?, ?, 0)";
 
             pstmt = con.prepareStatement(confirmFriendRequestUpdate);
             pstmt.setString(1, patient_alias);

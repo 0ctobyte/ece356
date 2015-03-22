@@ -6,6 +6,7 @@
 package ece356;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -30,8 +31,13 @@ public class AddFriendRequestServlet extends HttpServlet {
             throws ServletException, IOException {
         String url = "/index.jsp";
         String friend_alias = request.getParameter("friend_alias");
+        Integer index = Integer.parseInt(request.getParameter("index"));
         User user = (User)request.getSession().getAttribute("user");
         try {
+            DBAO.addFriendRequest(user.getUserAlias(), friend_alias);
+            ArrayList<PatientSearch> ps = (ArrayList<PatientSearch>)request.getSession().getAttribute("patientSearchResults");
+            ps.get(index).setFriendAlias(friend_alias);
+            url = "/patient_search_result.jsp";
         } catch(Exception e) {
             System.err.println(e.getMessage());
         }

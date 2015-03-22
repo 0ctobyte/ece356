@@ -52,6 +52,10 @@ public class PatientSearch {
         return this.friend_alias;
     }
     
+    public void setFriendAlias(String friend_alias) {
+        this.friend_alias = friend_alias;
+    }
+    
     public Boolean getAccepted() {
         return this.accepted;
     }
