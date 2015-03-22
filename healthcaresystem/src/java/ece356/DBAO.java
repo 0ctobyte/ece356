@@ -96,13 +96,201 @@ public class DBAO {
         return ret;
     }
     
+    public static void addFriendRequest(String patient_alias, String friend_alias)
+        throws ClassNotFoundException, SQLException, NamingException
+    {         
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        
+        try {
+            con = getConnection();
+            String confirmFriendRequestUpdate = "UPDATE FriendRequest"
+                    + " SET accepted = 0, patient_alias = ?, friend_alias = ?";
+
+            pstmt = con.prepareStatement(confirmFriendRequestUpdate);
+            pstmt.setString(1, patient_alias);
+            pstmt.setString(2, friend_alias);
+
+            pstmt.executeUpdate();
+
+        } finally {
+            if (pstmt != null) {
+                pstmt.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }     
+    }
+    
+    public static ArrayList<DoctorSearch> performDoctorSearch(String user_alias, String first_name,
+            String middle_name, String last_name, String gender, Integer num_years_licensed,
+            Integer street_number, String street_name, String postal_code, String city, 
+            String province, String specialization, Double avg_rating,
+            String review_by_friend_alias, String keyword)
+        throws ClassNotFoundException, SQLException, NamingException {
+        
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ArrayList<DoctorSearch> r = new ArrayList<>();
+        String filteredString = "";
+        
+        try {
+            // Put the user alias before the search query
+            
+            // Construct a filtered string for the DB search.
+            if (!first_name.isEmpty()) {
+                filteredString += " AND u.first_name LIKE ?";
+            }
+
+            if (!middle_name.isEmpty()) {
+                filteredString += " AND u.middle_name LIKE ?";
+            }
+
+            if (!last_name.isEmpty()) {
+                filteredString += " AND u.last_name LIKE ?";
+            }
+            
+            if (!gender.isEmpty()){
+                filteredString += " AND d.gender = ?";
+            }
+            
+            if (num_years_licensed >= 0){
+                filteredString += " AND num_years_licensed = ?";
+            }
+            
+            if (street_number > 0){
+                filteredString += " AND w.street_number = ?";
+            }
+            
+            if (!street_name.isEmpty()){
+                filteredString += " AND w.street_name LIKE ?";
+            }
+            
+            if (!postal_code.isEmpty()){
+                filteredString += " AND w.postal_code LIKE ?";
+            }
+            
+            if (!city.isEmpty()){
+                filteredString += " AND c.city LIKE ?";
+            }
+            
+            if (!province.isEmpty()){
+                filteredString += " AND c.province LIKE ?";
+            }
+            
+            if (!specialization.isEmpty()){
+                filteredString += " AND s.specialization_name LIKE ?";
+            }
+            
+            if (avg_rating > 0){
+                filteredString += " AND ar.avg_rating = ?";
+            }
+            
+            if (!review_by_friend_alias.isEmpty()){
+                filteredString += " AND t.reviewed_by_friend LIKE ?";
+            }
+            
+            if (!keyword.isEmpty()){
+                filteredString += " AND t.comments LIKE ?";
+            }
+            
+            String doctorSearchQuery = "DISTINCT d.doctor_alias, u.name_first,"
+                    + " u.name_middle, u.name_last, ar.avg_rating"
+                    + " FROM ((((((Doctor AS d INNER JOIN User AS u"
+                    + " ON d.doctor_alias=u.user_alias) NATURAL JOIN"
+                    + " Specialization AS s) NATURAL JOIN WorkAddress as w)"
+                    + " NATURAL JOIN City AS c) NATURAL JOIN Province as p)"
+                    + " LEFT JOIN (SELECT AVG(star_rating - 1) AS avg_rating,"
+                    + " doctor_alias FROM Review GROUP BY doctor_alias) AS ar"
+                    + " ON d.doctor_alias, r.comments, fr.accepted AS reviewed_by_friend"
+                    + " FROM Review AS r LEFT JOIN (SELECT * FROM FriendRequest"
+                    + " WHERE patient_alias=? OR friend_alias=? AS fr ON"
+                    + " r.patient_alias=fr.patient_alias OR r.patient_alias=fr.friend_alias)"
+                    + " AS t on t.doctor_alias=d.doctor_alias) LEFT JOIN (SELECT"
+                    + " doctor_alias, COUNT(DISTINCT review_id) AS num_reviews"
+                    + " FROM Review GROUP BY doctor_alias) AS nr ON"
+                    + " d.doctor_alias=nr.doctor_alias WHERE TRUE" + filteredString;
+            
+            
+            pstmt = con.prepareStatement(doctorSearchQuery);
+
+            int num = 0;
+            if (!first_name.isEmpty()) {
+                pstmt.setString(++num, "%"+first_name+"%");
+            }
+
+            if (!middle_name.isEmpty()) {
+                pstmt.setString(++num, "%"+middle_name+"%");
+            }
+
+            if (!last_name.isEmpty()) {
+                pstmt.setString(++num, "%"+last_name+"%");
+            }
+            
+            if (!gender.isEmpty()){
+                pstmt.setString(++num, gender);
+            }
+            
+            if (num_years_licensed >= 0){
+                pstmt.setInt(++num, num_years_licensed);
+            }
+            
+            if (street_number > 0){
+                pstmt.setInt(++num, street_number);
+            }
+            
+            if (!street_name.isEmpty()){
+                pstmt.setString(++num, "%"+street_name+"%");
+            }
+            
+            if (!postal_code.isEmpty()){
+                pstmt.setString(++num, "%"+postal_code+"%");
+            }
+            
+            if (!city.isEmpty()){
+                pstmt.setString(++num, "%"+city+"%");
+            }
+            
+            if (!province.isEmpty()){
+                pstmt.setString(++num, "%"+province+"%");
+            }
+            
+            if (!specialization.isEmpty()){
+                pstmt.setString(++num, "%"+specialization+"%");
+            }
+            
+            if (avg_rating > 0){
+                pstmt.setDouble(++num, avg_rating);
+            }
+            
+            if (!review_by_friend_alias.isEmpty()){
+                pstmt.setString(++num, "%"+review_by_friend_alias+"%");
+            }
+            
+            if (!keyword.isEmpty()){
+                pstmt.setString(++num, "%"+keyword+"%");
+            }
+            
+        } finally {
+            if (pstmt != null) {
+                pstmt.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+        return r;
+    }
+
+    
     public static ArrayList<PatientSearch> performPatientSearch(String patient_alias, String province, String city)
             throws ClassNotFoundException, SQLException, NamingException {
         
         Connection con = null;
         PreparedStatement pstmt = null;
         ArrayList<PatientSearch> r = new ArrayList<>();
-        String filteredString = null;
+        String filteredString = "";
         
         try {
             con = getConnection();
@@ -110,15 +298,15 @@ public class DBAO {
             // Construct a filtered string for the DB search.
             if (!patient_alias.isEmpty())
             {
-                filteredString += " AND patient_alias LIKE %?%";
+                filteredString += " AND patient_alias LIKE ?";
             }
             
             if (!province.isEmpty()) {
-                filteredString += " AND province LIKE %?%";
+                filteredString += " AND province LIKE ?";
             }
             
             if (!city.isEmpty()) {
-                filteredString += " AND city LIKE %?%";
+                filteredString += " AND city LIKE ?";
             }
             
             String patientSearchQuery = "SELECT pcr.*, fr.friend_alias, fr.accepted"
@@ -135,13 +323,13 @@ public class DBAO {
 
             int num = 0;
             if (!patient_alias.isEmpty()) {
-                pstmt.setString(++num, patient_alias);
+                pstmt.setString(++num, "%"+patient_alias+"%");
             }
             if (!province.isEmpty()) {
-                pstmt.setString(++num, province);
+                pstmt.setString(++num, "%"+province+"%");
             }
             if (!city.isEmpty()) {
-                pstmt.setString(++num, city);
+                pstmt.setString(++num, "%"+city+"%");
             }
             
             ResultSet resultSet;
@@ -154,11 +342,11 @@ public class DBAO {
             resultSet.beforeFirst();
             while (resultSet.next()) {
                 PatientSearch ps = new PatientSearch(
-                        resultSet.getString("pc.patient_alias"),
-                        resultSet.getString("pc.city"),
-                        resultSet.getString("pc.province"),
-                        resultSet.getInt("num_reviews"),
-                        resultSet.getString("last_review"),
+                        resultSet.getString("pcr.patient_alias"),
+                        resultSet.getString("pcr.city"),
+                        resultSet.getString("pcr.province"),
+                        resultSet.getInt("pcr.num_reviews"),
+                        resultSet.getString("pcr.last_review"),
                         resultSet.getString("fr.friend_alias"),
                         resultSet.getBoolean("fr.accepted")
                 );
@@ -175,17 +363,6 @@ public class DBAO {
         
         return r;
     }
-    
-    /*
-        private String patient_alias;
-     private String city;
-     private String province;
-     private Integer num_reviews;
-     private String last_review;
-     private String friend_alias;
-     private Boolean accepted;
-    */
-    
 
     public static Integer getNextReview(int review_id)
             throws ClassNotFoundException, SQLException, NamingException {
