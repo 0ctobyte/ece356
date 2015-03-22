@@ -60,6 +60,42 @@ public class DBAO {
         return con;
     }
     
+    public static ArrayList<String> getSpecializations()
+            throws ClassNotFoundException, SQLException, NamingException 
+    {
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ArrayList<String> ret = new ArrayList<>();
+
+        try {
+            con = getConnection();
+            String selectAllSpecializations = "SELECT DISTINCT specialization_name FROM Specialization";
+
+            pstmt = con.prepareStatement(selectAllSpecializations);
+
+            ResultSet resultSet;
+            resultSet = pstmt.executeQuery();
+
+            if (!resultSet.first()) {
+                return ret;
+            }
+
+            resultSet.beforeFirst();
+            while (resultSet.next()) {
+                ret.add(resultSet.getString("specialization_name"));
+            }
+        } finally {
+            if (pstmt != null) {
+                pstmt.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+
+        return ret;
+    }
+    
     public static ArrayList<String> getProvinces()
             throws ClassNotFoundException, SQLException, NamingException {
         
@@ -136,8 +172,8 @@ public class DBAO {
         String filteredString = "";
         
         try {
-            // Put the user alias before the search query
-            
+            con = getConnection();
+                
             // Construct a filtered string for the DB search.
             if (!first_name.isEmpty()) {
                 filteredString += " AND u.first_name LIKE ?";
