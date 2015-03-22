@@ -191,13 +191,13 @@ public class DBAO {
         }
     }
     
-    public static PatientDoctorProfile patientDoctorProfileView(String selected_doctor_alias)
+    public static DoctorProfile patientDoctorProfileView(String selected_doctor_alias)
             throws ClassNotFoundException, SQLException, NamingException {
 
         Connection con = null;
         PreparedStatement pstmt = null;
 
-        PatientDoctorProfile pdp;
+        DoctorProfile pdp;
 
         try {
             con = getConnection();
@@ -213,12 +213,13 @@ public class DBAO {
                 throw new RuntimeException("No Doctor Found with alias: " + selected_doctor_alias);
             }
 
-            pdp = new PatientDoctorProfile (
+            pdp = new DoctorProfile (
                     resultSet.getString("PatientDoctorProfile.doctor_alias"),
+                    null,
                     resultSet.getString("PatientDoctorProfile.name_first"),
                     resultSet.getString("PatientDoctorProfile.name_middle"),
                     resultSet.getString("PatientDoctorProfile.name_last"),
-                    (resultSet.getString("PatientDoctorProfile.gender").equals("M")) ? PatientDoctorProfile.Gender.M : PatientDoctorProfile.Gender.F,
+                    (resultSet.getString("PatientDoctorProfile.gender").equals("M")) ? DoctorProfile.Gender.M : DoctorProfile.Gender.F,
                     resultSet.getInt("PatientDoctorProfile.num_years_licensed"),
                     resultSet.getDouble("PatientDoctorProfile.avg_rating"),
                     resultSet.getInt("PatientDoctorProfile.num_reviews")
@@ -826,13 +827,13 @@ public class DBAO {
     }
     
     
-    public static DoctorOwnProfile doctorOwnProfileView(String doctor_alias)
+    public static DoctorProfile doctorOwnProfileView(String doctor_alias)
             throws ClassNotFoundException, SQLException, NamingException {
         
         Connection con = null;
         PreparedStatement pstmt = null;
         
-        DoctorOwnProfile dop;
+        DoctorProfile dop;
 
         try {
             con = getConnection();
@@ -846,13 +847,13 @@ public class DBAO {
             
             if (!resultSet.first()) throw new RuntimeException("No Doctor Found with alias: " + doctor_alias);
            
-            dop = new DoctorOwnProfile(
+            dop = new DoctorProfile(
                     resultSet.getString("DoctorOwnProfileView.doctor_alias"),
                     resultSet.getString("DoctorOwnProfileView.email"),
                     resultSet.getString("DoctorOwnProfileView.name_first"),
                     resultSet.getString("DoctorOwnProfileView.name_middle"),
                     resultSet.getString("DoctorOwnProfileView.name_last"),
-                    (resultSet.getString("DoctorOwnProfileView.gender").equals("M")) ? DoctorOwnProfile.Gender.M : DoctorOwnProfile.Gender.F,
+                    (resultSet.getString("DoctorOwnProfileView.gender").equals("M")) ? DoctorProfile.Gender.M : DoctorProfile.Gender.F,
                     resultSet.getInt("DoctorOwnProfileView.num_years_licensed"),
                     resultSet.getDouble("DoctorOwnProfileView.avg_rating"),
                     resultSet.getInt("DoctorOwnProfileView.num_reviews")
@@ -870,12 +871,12 @@ public class DBAO {
         return dop;
     }
 
-    public static PatientOwnProfile patientOwnProfileView(String patient_alias)
+    public static PatientProfile patientOwnProfileView(String patient_alias)
         throws ClassNotFoundException, SQLException, NamingException {
         Connection con = null;
         PreparedStatement pstmt = null;
 
-        PatientOwnProfile pop;
+        PatientProfile pop;
 
         try {
             con = getConnection();
@@ -891,7 +892,7 @@ public class DBAO {
                 throw new RuntimeException("No Patient Found with alias: " + patient_alias);
             }
 
-            pop = new PatientOwnProfile(
+            pop = new PatientProfile(
                 resultSet.getString("PatientOwnProfileView.patient_alias"),
                 resultSet.getString("PatientOwnProfileView.email"),
                 resultSet.getString("PatientOwnProfileView.name_first"),

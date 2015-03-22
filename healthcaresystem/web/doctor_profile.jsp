@@ -4,6 +4,7 @@
     Author     : sekharb
 --%>
 
+<%@page import="ece356.User"%>
 <%@ page contentType="text/html" pageEncoding="UTF-8" %>
 <%@ page import="ece356.Specialization" %>
 <%@ page import="ece356.WorkAddress" %>
@@ -14,14 +15,17 @@
         <title>HealthCareSystem | Profile</title>
     </head>
     <body>
-        <jsp:useBean id="doctorProfile" class="ece356.DoctorOwnProfile" scope="request"/>
+        <jsp:useBean id="doctorProfile" class="ece356.DoctorProfile" scope="request"/>
         <jsp:useBean id="specializations" class="java.util.ArrayList" scope="request"/>
         <jsp:useBean id="workAddresses" class="java.util.ArrayList" scope="request"/>
         <jsp:useBean id="reviewIDs" class="java.util.ArrayList" scope="request"/>
+        <jsp:useBean id="user" class="ece356.User" scope="session"/>
         <h1>Profile</h1>
         <%= doctorProfile.getDoctorAlias() %><br>
         Name: <%= doctorProfile.getFirstName() + " " + doctorProfile.getLastName() %><br>
-        Email: <%= doctorProfile.getEmail() %><br>
+        <% if(user.getAccountType() == User.AccountType.Doctor) { %>
+            Email: <%= doctorProfile.getEmail() %><br>
+        <% } %>
         Gender: <%= doctorProfile.getGender() %><br>
         Years Licensed: <%= doctorProfile.getNumYearsLicensed() %><br>
         Average Rating: <%= doctorProfile.getAvgRating() %><br>
@@ -53,6 +57,9 @@
                 <li><a href="ReviewDetailServlet?rid=<%= (Integer)o %>"><%= (Integer)o %></a></li>
             <% } %>
         </ul>
-        
+        <% if(user.getAccountType() == user.getAccountType().Patient) { %>
+            <a href="WriteReviewFormServlet?doctor_alias=<%= doctorProfile.getDoctorAlias() %>">Write review</a><br>
+            <a href="PatientProfileServlet">Profile</a>
+        <% } %>
     </body>
 </html>

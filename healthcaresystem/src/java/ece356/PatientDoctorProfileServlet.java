@@ -6,6 +6,7 @@
 package ece356;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -15,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author sekharb
  */
-public class PatientProfileServlet extends HttpServlet {
+public class PatientDoctorProfileServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -29,12 +30,17 @@ public class PatientProfileServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String url = "/index.jsp";
-        User user = (User)request.getSession().getAttribute("user");
-        String patient_alias = user.getUserAlias();
+        String doctor_alias = request.getParameter("doctor_alias");
         try {
-            PatientProfile patientProfile = DBAO.patientOwnProfileView(patient_alias);
-            request.setAttribute("patientProfile", patientProfile);
-            url = "/patient_profile.jsp";
+            DoctorProfile docProfile = DBAO.doctorOwnProfileView(doctor_alias);
+            ArrayList<Specialization> specializations = DBAO.getSpecializations(doctor_alias);
+            ArrayList<WorkAddress> workAddresses = DBAO.getWorkAddresses(doctor_alias);
+            ArrayList<Integer> reviewIDs = DBAO.getReviewIDs(doctor_alias);
+            request.setAttribute("doctorProfile", docProfile);
+            request.setAttribute("specializations", specializations);
+            request.setAttribute("workAddresses", workAddresses);
+            request.setAttribute("reviewIDs", reviewIDs);
+            url = "/doctor_profile.jsp";
         } catch(Exception e) {
             System.err.println(e.getMessage());
         }

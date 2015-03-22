@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author sekharb
  */
-public class PatientProfileServlet extends HttpServlet {
+public class WriteReviewFormServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -29,12 +29,10 @@ public class PatientProfileServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String url = "/index.jsp";
-        User user = (User)request.getSession().getAttribute("user");
-        String patient_alias = user.getUserAlias();
         try {
-            PatientProfile patientProfile = DBAO.patientOwnProfileView(patient_alias);
-            request.setAttribute("patientProfile", patientProfile);
-            url = "/patient_profile.jsp";
+            String doctor_alias = request.getParameter("doctor_alias");
+            request.getSession().setAttribute("review_doctor_alias", doctor_alias);
+            url = "/write_review_form.jsp";
         } catch(Exception e) {
             System.err.println(e.getMessage());
         }

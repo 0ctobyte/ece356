@@ -33,7 +33,7 @@ public class DoctorProfileServlet extends HttpServlet {
         User user = (User)request.getSession().getAttribute("user");
         String doctor_alias = user.getUserAlias();
         try {
-            DoctorOwnProfile docProfile = DBAO.doctorOwnProfileView(doctor_alias);
+            DoctorProfile docProfile = DBAO.patientDoctorProfileView(doctor_alias);
             ArrayList<Specialization> specializations = DBAO.getSpecializations(doctor_alias);
             ArrayList<WorkAddress> workAddresses = DBAO.getWorkAddresses(doctor_alias);
             ArrayList<Integer> reviewIDs = DBAO.getReviewIDs(doctor_alias);
@@ -41,7 +41,7 @@ public class DoctorProfileServlet extends HttpServlet {
             request.setAttribute("specializations", specializations);
             request.setAttribute("workAddresses", workAddresses);
             request.setAttribute("reviewIDs", reviewIDs);
-            url = "/doctor_own_profile.jsp";
+            url = "/doctor_profile.jsp";
         } catch(Exception e) {
             System.err.println(e.getMessage());
         }

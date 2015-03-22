@@ -28,12 +28,18 @@
                 DoctorSearch ds = (DoctorSearch)o;
             %>
                 <tr>
-                    <td><%= ds.getFirstName() + " " + ds.getLastName() %></td>
+                    <td>
+                        <a href="PatientDoctorProfileServlet?doctor_alias=<%= ds.getDoctorAlias() %>">
+                            <%= ds.getFirstName() + " " + ds.getLastName() %>
+                        </a>
+                    </td>
                     <td><%= ds.getGender() %></td>
                     <td><%= ds.getAvgRating() %></td>
                     <td><%= ds.getNumReviews() %></td>
                 </tr>
             <% } %>
         </table>
+        <a href="DoctorSearchFormServlet">Search again</a><br>
+        <a href="PatientProfileServlet">Profile</a>
     </body>
 </html>

@@ -4,6 +4,7 @@
     Author     : sekharb
 --%>
 
+<%@page import="ece356.User"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -30,6 +31,10 @@
             <a href="ReviewDetailServlet?rid=<%=next_rid%>">next</a>
         <% } %>
         <br>
-        <a href="DoctorProfileServlet">Profile</a>
+        <% if(user.getAccountType() == User.AccountType.Doctor) { %>
+            <a href="DoctorProfileServlet">Profile</a>
+        <% } else { %>
+            <a href="PatientProfileServlet">Profile</a>
+        <% } %>
     </body>
 </html>

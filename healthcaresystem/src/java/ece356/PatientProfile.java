@@ -9,7 +9,7 @@ package ece356;
  *
  * @author sekharb
  */
-public class PatientOwnProfile {
+public class PatientProfile {
     private String patient_alias;
     private String email;
     private String name_first;
@@ -18,7 +18,7 @@ public class PatientOwnProfile {
     private String city;
     private String province;
     
-    public PatientOwnProfile(String patient_alias, String email, String name_first, String name_middle, String name_last, String city, String province) {
+    public PatientProfile(String patient_alias, String email, String name_first, String name_middle, String name_last, String city, String province) {
         this.patient_alias = patient_alias;
         this.email = email;
         this.name_first = name_first;

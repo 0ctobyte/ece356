@@ -12,7 +12,7 @@
         <title>HealthCareSystem | Profile</title>
     </head>
     <body>
-        <jsp:useBean id="patientProfile" class="ece356.PatientOwnProfile" scope="request"/>
+        <jsp:useBean id="patientProfile" class="ece356.PatientProfile" scope="request"/>
         <h1>Profile</h1>
         <%= patientProfile.getPatientAlias() %><br>
         Name: <%= patientProfile.getFirstName() + " " + patientProfile.getLastName() %><br>

@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author sekharb
  */
-public class PatientProfileServlet extends HttpServlet {
+public class AddReviewServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -30,15 +30,26 @@ public class PatientProfileServlet extends HttpServlet {
             throws ServletException, IOException {
         String url = "/index.jsp";
         User user = (User)request.getSession().getAttribute("user");
-        String patient_alias = user.getUserAlias();
+        String doctor_alias = (String)request.getSession().getAttribute("review_doctor_alias");
+        String rating = request.getParameter("add_review_rating");
+        String comments = request.getParameter("add_review_comments");
         try {
-            PatientProfile patientProfile = DBAO.patientOwnProfileView(patient_alias);
-            request.setAttribute("patientProfile", patientProfile);
-            url = "/patient_profile.jsp";
+            if(comments.isEmpty()) {
+                String wreview_msg = "Comments field must not be empty!";
+                request.setAttribute("wreview_msg", wreview_msg);
+                url = "/write_review_form.jsp";
+            } else {
+                DBAO.addDoctorReview(user.getUserAlias(), doctor_alias, Double.parseDouble(rating), comments);
+                url = "/PatientDoctorProfileServlet?doctor_alias=" + doctor_alias;
+            }
         } catch(Exception e) {
             System.err.println(e.getMessage());
         }
-        getServletContext().getRequestDispatcher(url).forward(request, response);
+        if(url.contains(".jsp")) {
+            getServletContext().getRequestDispatcher(url).forward(request, response);
+        } else {
+            response.sendRedirect(request.getContextPath()+url);
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

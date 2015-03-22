@@ -9,7 +9,7 @@ package ece356;
  *
  * @author sekharb
  */
-public class DoctorOwnProfile {
+public class DoctorProfile {
     public enum Gender {
         M,
         F
@@ -25,7 +25,7 @@ public class DoctorOwnProfile {
     private Double avg_rating;
     private Integer num_reviews;
     
-    public DoctorOwnProfile(String doctor_alias, String email, String name_first, String name_middle, String name_last, Gender gender, Integer num_years_licensed, Double avg_rating, Integer num_reviews) {
+    public DoctorProfile(String doctor_alias, String email, String name_first, String name_middle, String name_last, Gender gender, Integer num_years_licensed, Double avg_rating, Integer num_reviews) {
         this.doctor_alias = doctor_alias;
         this.email = email;
         this.name_first = name_first;

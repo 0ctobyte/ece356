@@ -44,6 +44,18 @@
         <servlet-name>AddFriendRequestServlet</servlet-name>
         <servlet-class>ece356.AddFriendRequestServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>PatientDoctorProfileServlet</servlet-name>
+        <servlet-class>ece356.PatientDoctorProfileServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>WriteReviewFormServlet</servlet-name>
+        <servlet-class>ece356.WriteReviewFormServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AddReviewServlet</servlet-name>
+        <servlet-class>ece356.AddReviewServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/LoginServlet</url-pattern>
@@ -87,6 +99,18 @@
     <servlet-mapping>
         <servlet-name>AddFriendRequestServlet</servlet-name>
         <url-pattern>/AddFriendRequestServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PatientDoctorProfileServlet</servlet-name>
+        <url-pattern>/PatientDoctorProfileServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>WriteReviewFormServlet</servlet-name>
+        <url-pattern>/WriteReviewFormServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddReviewServlet</servlet-name>
+        <url-pattern>/AddReviewServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
