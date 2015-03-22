@@ -228,7 +228,7 @@ public class DBAO {
             }
             
             if (!keyword.isEmpty()){
-                filteredString += " AND t.comments LIKE ?";
+                filteredString += " AND t.comments COLLATE UTF8_GENERAL_CI LIKE ?";
             }
             
             String doctorSearchQuery = "DISTINCT d.doctor_alias, u.name_first,"
