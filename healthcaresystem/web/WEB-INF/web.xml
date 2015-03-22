@@ -24,6 +24,14 @@
         <servlet-name>AddFriendServlet</servlet-name>
         <servlet-class>ece356.AddFriendServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>PatientSearchServlet</servlet-name>
+        <servlet-class>ece356.PatientSearchServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DoctorSearchServlet</servlet-name>
+        <servlet-class>ece356.DoctorSearchServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/LoginServlet</url-pattern>
@@ -47,6 +55,14 @@
     <servlet-mapping>
         <servlet-name>AddFriendServlet</servlet-name>
         <url-pattern>/AddFriendServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PatientSearchServlet</servlet-name>
+        <url-pattern>/PatientSearchServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DoctorSearchServlet</servlet-name>
+        <url-pattern>/DoctorSearchServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
