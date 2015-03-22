@@ -27,10 +27,10 @@
                 </a>
             </li>
             <li>
-                <a href="patient_search_form.jsp">Patient search</a>
+                <a href="PatientSearchFormServlet">Patient search</a>
             </li>
             <li>
-                <a href="doctor_search_form.jsp">Doctor search</a>
+                <a href="DoctorSearchFormServlet">Doctor search</a>
             </li>
         </ul>
         

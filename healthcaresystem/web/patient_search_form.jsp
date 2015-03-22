@@ -12,11 +12,19 @@
         <title>HealthCareSystem | Patient Search</title>
     </head>
     <body>
+        <jsp:useBean id="provinces" class="java.util.ArrayList" scope="request"/>
         <h1>Patient Search</h1>
         <form name="patient_search_form" action="PatientSearchServlet" method="POST">
             Patient alias: <input type="text" name="patient_search_alias" value="" /><br>
             city: <input type="text" name="patient_search_city" value="" /><br>
-            province: <input type="text" name="patient_search_province" value="" /><br>
+            province: <select name="patient_search_province">
+                <option></option>
+                <% for(Object o: provinces) {
+                    String province = (String)o;
+                %>
+                    <option><%= province %></option>
+                <% } %>
+            </select><br>
             <input type="submit" value="Search" name="patient_search_go" />
         </form>
     </body>
