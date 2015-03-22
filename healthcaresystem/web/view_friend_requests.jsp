@@ -22,7 +22,7 @@
             FriendRequest fr = (FriendRequest)o;
         %>
             <%= fr.getPatientAlias() %> <%= fr.getEmail() %> 
-            <a href="AddFriendServlet?friend_alias=<%=fr.getPatientAlias()%>">
+            <a href="ConfirmFriendServlet?id=0&friend_alias=<%=fr.getPatientAlias()%>">
                 Confirm
             </a><br>
         <% } %>
@@ -32,8 +32,6 @@
         <% } else if(nofr_msg != null) { %>
             <%= nofr_msg %><br>
         <% } %>
-        <a href="PatientProfileServlet?patient_alias=<%=user.getUserAlias()%>">
-            Profile
-        </a>
+        <a href="PatientProfileServlet">Profile</a>
     </body>
 </html>

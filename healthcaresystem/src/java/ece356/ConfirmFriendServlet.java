@@ -6,6 +6,7 @@
 package ece356;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -15,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author sekharb
  */
-public class AddFriendServlet extends HttpServlet {
+public class ConfirmFriendServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -30,12 +31,20 @@ public class AddFriendServlet extends HttpServlet {
             throws ServletException, IOException {
         String url = "/index.jsp";
         String friend_alias = request.getParameter("friend_alias");
+        Integer id = Integer.parseInt(request.getParameter("id"));
         User user = (User)request.getSession().getAttribute("user");
         try {
             DBAO.confirmFriendRequest(user.getUserAlias(), friend_alias);
             String confirm_msg = "You are now friends with " + friend_alias + "!";
             request.setAttribute("confirm_msg", confirm_msg);
-            url = "/ViewFriendRequestsServlet?user_alias=" + user.getUserAlias();
+            if(id == 0) {
+                url = "/ViewFriendRequestsServlet";
+            } else {
+                ArrayList<PatientSearch> ps = (ArrayList<PatientSearch>)request.getSession().getAttribute("patientSearchResults");
+                Integer index = Integer.parseInt(request.getParameter("index"));
+                ps.get(index).setAccepted(true);
+                url = "/patient_search_result.jsp";
+            }
         } catch(Exception e) {
             System.err.println(e.getMessage());
         }

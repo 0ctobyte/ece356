@@ -29,7 +29,8 @@ public class PatientProfileServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String url = "/index.jsp";
-        String patient_alias = request.getParameter("patient_alias");
+        User user = (User)request.getSession().getAttribute("user");
+        String patient_alias = user.getUserAlias();
         try {
             PatientOwnProfile patientProfile = DBAO.patientOwnProfileView(patient_alias);
             request.setAttribute("patientProfile", patientProfile);

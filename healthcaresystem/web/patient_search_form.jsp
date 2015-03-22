@@ -13,6 +13,7 @@
     </head>
     <body>
         <jsp:useBean id="provinces" class="java.util.ArrayList" scope="request"/>
+        <jsp:useBean id="user" class="ece356.User" scope="session"/>
         <h1>Patient Search</h1>
         <form name="patient_search_form" action="PatientSearchServlet" method="POST">
             Patient alias: <input type="text" name="patient_search_alias" value="" /><br>
@@ -27,5 +28,6 @@
             </select><br>
             <input type="submit" value="Search" name="patient_search_go" />
         </form>
+        <a href="PatientProfileServlet">Profile</a>
     </body>
 </html>

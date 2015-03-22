@@ -30,7 +30,8 @@ public class DoctorProfileServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String url = "/index.jsp";
-        String doctor_alias = request.getParameter("doctor_alias");
+        User user = (User)request.getSession().getAttribute("user");
+        String doctor_alias = user.getUserAlias();
         try {
             DoctorOwnProfile docProfile = DBAO.doctorOwnProfileView(doctor_alias);
             ArrayList<Specialization> specializations = DBAO.getSpecializations(doctor_alias);

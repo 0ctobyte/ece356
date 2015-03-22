@@ -6,6 +6,7 @@
 package ece356;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -28,6 +29,15 @@ public class DoctorSearchFormServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String url = "/index.jsp";
+        try {
+            ArrayList<String> provinces = DBAO.getProvinces();
+            request.setAttribute("provinces", provinces);
+            url = "/doctor_search_form.jsp";
+        } catch(Exception e) {
+            System.err.println(e.getMessage());
+        }
+        getServletContext().getRequestDispatcher(url).forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

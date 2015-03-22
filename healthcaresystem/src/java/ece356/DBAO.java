@@ -283,8 +283,7 @@ public class DBAO {
         return r;
     }
 
-    
-    public static ArrayList<PatientSearch> performPatientSearch(String patient_alias, String province, String city)
+    public static ArrayList<PatientSearch> performPatientSearch(String user_alias, String patient_alias, String province, String city)
             throws ClassNotFoundException, SQLException, NamingException {
         
         Connection con = null;
@@ -331,6 +330,9 @@ public class DBAO {
             if (!city.isEmpty()) {
                 pstmt.setString(++num, "%"+city+"%");
             }
+            
+            pstmt.setString(++num, user_alias);
+            pstmt.setString(++num, user_alias);
             
             ResultSet resultSet;
             resultSet = pstmt.executeQuery();
