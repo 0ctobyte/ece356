@@ -37,11 +37,15 @@ public class AddFriendRequestServlet extends HttpServlet {
             DBAO.addFriendRequest(user.getUserAlias(), friend_alias);
             ArrayList<PatientSearch> ps = (ArrayList<PatientSearch>)request.getSession().getAttribute("patientSearchResults");
             ps.get(index).setFriendAlias(friend_alias);
-            url = "/patient_search_result.jsp";
+            url = "/PatientSearchServlet?update=true";
         } catch(Exception e) {
             System.err.println(e.getMessage());
         }
-        getServletContext().getRequestDispatcher(url).forward(request, response);
+         if(url.contains(".jsp")) {
+            getServletContext().getRequestDispatcher(url).forward(request, response);
+        } else {
+            response.sendRedirect(request.getContextPath()+url);
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

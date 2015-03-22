@@ -34,10 +34,17 @@ public class PatientSearchServlet extends HttpServlet {
         String patient_alias = request.getParameter("patient_search_alias");
         String city = request.getParameter("patient_search_city");
         String province = request.getParameter("patient_search_province");
+        String update = request.getParameter("update");
         try {
-            ArrayList<PatientSearch> ps = DBAO.performPatientSearch(user.getUserAlias(), patient_alias, province, city);
-            request.getSession().setAttribute("patientSearchResults", ps);
-            url = "/patient_search_result.jsp";
+            if(update != null && update.equals("true")) {
+                // The search has already been performed and is in the session
+                // Just redisplay the search result page
+                url = "/patient_search_result.jsp";
+            } else {
+                ArrayList<PatientSearch> ps = DBAO.performPatientSearch(user.getUserAlias(), patient_alias, province, city);
+                request.getSession().setAttribute("patientSearchResults", ps);
+                url = "/patient_search_result.jsp";
+            }
         } catch(Exception e) {
             System.err.println(e.getMessage());
         }
