@@ -10,5 +10,37 @@ package ece356;
  * @author sekharb
  */
 public class DoctorSearch {
+    private String doctor_alias;
+    private String name_first;
+    private String name_middle;
+    private String name_last;
+    private Double avg_rating;
     
+    public DoctorSearch(String doctor_alias, String name_first, String name_middle, String name_last, Double avg_rating) {
+        this.doctor_alias = doctor_alias;
+        this.name_first = name_first;
+        this.name_middle = name_middle;
+        this.name_last = name_last;
+        this.avg_rating = avg_rating;
+    }
+    
+    public String getDoctorAlias() {
+        return this.doctor_alias;
+    }
+    
+    public String getFirstName() {
+        return this.name_first;
+    }
+    
+    public String getMiddleName() {
+        return this.name_middle;
+    }
+    
+    public String getLastName() {
+        return this.name_last;
+    }
+    
+    public Double getAvgRating() {
+        return this.avg_rating;
+    }
 }
