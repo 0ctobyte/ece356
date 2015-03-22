@@ -132,6 +132,7 @@ public class DBAO {
         return ret;
     }
     
+    
     public static void addFriendRequest(String patient_alias, String friend_alias)
         throws ClassNotFoundException, SQLException, NamingException
     {         
@@ -157,6 +158,81 @@ public class DBAO {
                 con.close();
             }
         }     
+    }
+    
+    public static void addDoctorReview (String patient_alias, String doctor_alias, Double star_rating, String comments)
+            throws ClassNotFoundException, SQLException, NamingException
+    {
+        
+        Connection con = null;
+        PreparedStatement pstmt = null;
+
+        try {
+            con = getConnection();
+            String addDoctorReivewUpdate = "INSERT INTO Review(patient_alias, doctor_alias,"
+                    + " star_rating, comments)"
+                    + " VALUES (?, ?, ?, ?)";
+
+            pstmt = con.prepareStatement(addDoctorReivewUpdate);
+            pstmt.setString(1, patient_alias);
+            pstmt.setString(2, doctor_alias);
+            pstmt.setDouble(3, star_rating);
+            pstmt.setString(4, comments);
+
+            pstmt.executeUpdate();
+
+        } finally {
+            if (pstmt != null) {
+                pstmt.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+    }
+    
+    public static PatientDoctorProfile patientDoctorProfileView(String selected_doctor_alias)
+            throws ClassNotFoundException, SQLException, NamingException {
+
+        Connection con = null;
+        PreparedStatement pstmt = null;
+
+        PatientDoctorProfile pdp;
+
+        try {
+            con = getConnection();
+
+            String dpQuery = "SELECT * FROM PatientDoctorProfile WHERE user_alias = ?";
+
+            pstmt = con.prepareStatement(dpQuery);
+            pstmt.setString(1, selected_doctor_alias);
+
+            ResultSet resultSet = pstmt.executeQuery();
+
+            if (!resultSet.first()) {
+                throw new RuntimeException("No Doctor Found with alias: " + selected_doctor_alias);
+            }
+
+            pdp = new PatientDoctorProfile (
+                    resultSet.getString("PatientDoctorProfile.doctor_alias"),
+                    resultSet.getString("PatientDoctorProfile.name_first"),
+                    resultSet.getString("PatientDoctorProfile.name_middle"),
+                    resultSet.getString("PatientDoctorProfile.name_last"),
+                    (resultSet.getString("PatientDoctorProfile.gender").equals("M")) ? PatientDoctorProfile.Gender.M : PatientDoctorProfile.Gender.F,
+                    resultSet.getInt("PatientDoctorProfile.num_years_licensed"),
+                    resultSet.getDouble("PatientDoctorProfile.avg_rating"),
+                    resultSet.getInt("PatientDoctorProfile.num_reviews")
+            );
+        } finally {
+            if (pstmt != null) {
+                pstmt.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+
+        return pdp;
     }
     
     public static ArrayList<DoctorSearch> performDoctorSearch(String user_alias, String first_name,
@@ -192,7 +268,7 @@ public class DBAO {
             }
             
             if (num_years_licensed >= Integer.MIN_VALUE && num_years_licensed < Integer.MAX_VALUE){
-                filteredString += " AND num_years_licensed = ?";
+                filteredString += " AND num_years_licensed >= ?";
             }
             
             if (street_number >= Integer.MIN_VALUE && street_number < Integer.MAX_VALUE){
@@ -325,7 +401,8 @@ public class DBAO {
                         resultSet.getString("u.name_first"),
                         resultSet.getString("u.name_middle"),
                         resultSet.getString("u.name_last"),
-                        resultSet.getDouble("ar.avg_rating")
+                        resultSet.getDouble("ar.avg_rating"),
+                        resultSet.getInt("ar.num_reviews")
                 );
                 r.add(ds);
             }
@@ -789,16 +866,7 @@ public class DBAO {
         
         return dop;
     }
-    /*
-    *        public String patient_alias;
-    public String email;
-    public String name_first;
-    public String name_middle;
-    public String name_last;
-    public String city;
-    public String province;
-    
-    */
+
     public static PatientOwnProfile patientOwnProfileView(String patient_alias)
         throws ClassNotFoundException, SQLException, NamingException {
         Connection con = null;
