@@ -59,6 +59,129 @@ public class DBAO {
         }
         return con;
     }
+    
+    public static ArrayList<String> getProvinces()
+            throws ClassNotFoundException, SQLException, NamingException {
+        
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ArrayList<String> ret = new ArrayList<>();
+
+        try {
+            con = getConnection();
+            String selectAllProvinces = "SELECT * FROM Province";
+
+            pstmt = con.prepareStatement(selectAllProvinces);
+
+            ResultSet resultSet;
+            resultSet = pstmt.executeQuery();
+
+            if (!resultSet.first()) {
+                return ret;
+            }
+
+            resultSet.beforeFirst();
+            while (resultSet.next()) {
+                ret.add(resultSet.getString("province"));
+            }
+        } finally {
+            if (pstmt != null) {
+                pstmt.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+
+        return ret;
+    }
+    
+    public static ArrayList<PatientSearch> performPatientSearch(String patient_alias, String province, String city)
+            throws ClassNotFoundException, SQLException, NamingException {
+        
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ArrayList<PatientSearch> r;
+        String filteredString = null;
+        
+        try {
+            con = getConnection();
+            
+            // Construct a filtered string for the DB search.
+            if (!patient_alias.isEmpty())
+            {
+                filteredString += " AND patient_alias = ?";
+            }
+            
+            if (!province.isEmpty()) {
+                filteredString += " AND province = ?";
+            }
+            
+            if (!city.isEmpty()) {
+                filteredString += " AND city = ?";
+            }
+            
+            String patientSearchQuery = "SELECT pcr.*, fr.friend_alias, fr.accepted"
+                    + " FROM (SELECT pc.*, COUNT(DISTINCT review_id) AS num_reviews,"
+                    + " max(r.date) as last_review FROM (SELECT p.patient_alias,"
+                    + " c.city, c.province FROM Patient AS p NATURAL JOIN City as c"
+                    + " WHERE TRUE" + filteredString + ") AS pc"
+                    + " LEFT JOIN Review AS r ON r.patient_alias = pc.patient_alias"
+                    + " GROUP BY patient_alias) AS pcr LEFT JOIN FriendRequest AS fr"
+                    + " ON (fr.patient_alias = ? AND fr.friend_alias = pcr.patient_alias)"
+                    + " OR (fr.patient_alias = pcr.patient_alias AND fr.friend_alias = ?)";
+            
+            pstmt = con.prepareStatement(patientSearchQuery);
+
+            int num = 0;
+            if (!patient_alias.isEmpty()) {
+                pstmt.setString(++num, patient_alias);
+            }
+            if (!province.isEmpty()) {
+                pstmt.setString(++num, province);
+            }
+            if (!city.isEmpty()) {
+                pstmt.setString(++num, city);
+            }
+            
+            ResultSet resultSet;
+            resultSet = pstmt.executeQuery();
+
+            if (!resultSet.first()) {
+                return r;
+            }
+
+            resultSet.beforeFirst();
+            while (resultSet.next()) {
+                PatientSearch w = new PatientSearch(
+                        resultSet.getString("pc.patient_alias"),
+                        resultSet.getString("pc.city"),
+                        resultSet.getString("pc.province"),
+                        resultSet.getInt("num_reviews"),
+                );
+                ret.add(w);
+            }
+            
+        } finally {
+            if (pstmt != null) {
+                pstmt.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+    }
+    
+    /*
+        private String patient_alias;
+     private String city;
+     private String province;
+     private Integer num_reviews;
+     private String last_review;
+     private String friend_alias;
+     private Boolean accepted;
+    */
+    
 
     public static Integer getNextReview(int review_id)
             throws ClassNotFoundException, SQLException, NamingException {
