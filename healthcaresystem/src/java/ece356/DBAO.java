@@ -101,7 +101,7 @@ public class DBAO {
         
         Connection con = null;
         PreparedStatement pstmt = null;
-        ArrayList<PatientSearch> r;
+        ArrayList<PatientSearch> r = new ArrayList<>();
         String filteredString = null;
         
         try {
@@ -110,15 +110,15 @@ public class DBAO {
             // Construct a filtered string for the DB search.
             if (!patient_alias.isEmpty())
             {
-                filteredString += " AND patient_alias = ?";
+                filteredString += " AND patient_alias LIKE %?%";
             }
             
             if (!province.isEmpty()) {
-                filteredString += " AND province = ?";
+                filteredString += " AND province LIKE %?%";
             }
             
             if (!city.isEmpty()) {
-                filteredString += " AND city = ?";
+                filteredString += " AND city LIKE %?%";
             }
             
             String patientSearchQuery = "SELECT pcr.*, fr.friend_alias, fr.accepted"
@@ -153,15 +153,17 @@ public class DBAO {
 
             resultSet.beforeFirst();
             while (resultSet.next()) {
-                PatientSearch w = new PatientSearch(
+                PatientSearch ps = new PatientSearch(
                         resultSet.getString("pc.patient_alias"),
                         resultSet.getString("pc.city"),
                         resultSet.getString("pc.province"),
                         resultSet.getInt("num_reviews"),
+                        resultSet.getString("last_review"),
+                        resultSet.getString("fr.friend_alias"),
+                        resultSet.getBoolean("fr.accepted")
                 );
-                ret.add(w);
+                r.add(ps);
             }
-            
         } finally {
             if (pstmt != null) {
                 pstmt.close();
@@ -170,6 +172,8 @@ public class DBAO {
                 con.close();
             }
         }
+        
+        return r;
     }
     
     /*
