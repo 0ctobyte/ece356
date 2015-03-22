@@ -55,4 +55,8 @@ public class PatientSearch {
     public Boolean getAccepted() {
         return this.accepted;
     }
+    
+    public void setAccepted(Boolean accepted) {
+        this.accepted = accepted;
+    }
 }

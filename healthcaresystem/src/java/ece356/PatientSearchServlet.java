@@ -6,6 +6,7 @@
 package ece356;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -28,6 +29,19 @@ public class PatientSearchServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String url = "/index.jsp";
+        User user = (User)request.getSession().getAttribute("user");
+        String patient_alias = request.getParameter("patient_search_alias");
+        String city = request.getParameter("patient_search_city");
+        String province = request.getParameter("patient_search_province");
+        try {
+            ArrayList<PatientSearch> ps = DBAO.performPatientSearch(user.getUserAlias(), patient_alias, province, city);
+            request.getSession().setAttribute("patientSearchResults", ps);
+            url = "/patient_search_result.jsp";
+        } catch(Exception e) {
+            System.err.println(e.getMessage());
+        }
+        getServletContext().getRequestDispatcher(url).forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

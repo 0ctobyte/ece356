@@ -49,9 +49,9 @@ public class LoginServlet extends HttpServlet {
                 request.getSession().setAttribute("user", user);
                 
                 if(user.getAccountType() == User.AccountType.Doctor) {
-                    url = "/DoctorProfileServlet?doctor_alias="+user.getUserAlias();
+                    url = "/DoctorProfileServlet";
                 } else {
-                    url = "/PatientProfileServlet?patient_alias="+user.getUserAlias();
+                    url = "/PatientProfileServlet";
                 }
             } catch(Exception e) {
                 System.err.println(e.getMessage());

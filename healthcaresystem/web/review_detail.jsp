@@ -30,8 +30,6 @@
             <a href="ReviewDetailServlet?rid=<%=next_rid%>">next</a>
         <% } %>
         <br>
-        <a href="DoctorProfileServlet?doctor_alias=<%=user.getUserAlias()%>">
-            Profile
-        </a>
+        <a href="DoctorProfileServlet">Profile</a>
     </body>
 </html>

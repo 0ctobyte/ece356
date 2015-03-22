@@ -12,10 +12,12 @@
         <title>HealthCareSystem | Doctor Search</title>
     </head>
     <body>
+        <jsp:useBean id="user" class="ece356.User" scope="session"/>
         <h1>Doctor Search</h1>
         <form name="doctor_search_form" action="DoctorSearchServlet" method="POST">
             alias: <input type="text" name="doctor_search_alias" value="" /><br>
             <input type="submit" value="Search" name="doctor_search_go" />
         </form>
+        <a href="PatientProfileServlet">Profile</a>
     </body>
 </html>

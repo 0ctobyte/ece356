@@ -22,9 +22,7 @@
         
         <ul>
             <li>
-                <a href="ViewFriendRequestsServlet?user_alias=<%=patientProfile.getPatientAlias()%>">
-                    View friend requests
-                </a>
+                <a href="ViewFriendRequestsServlet">View friend requests</a>
             </li>
             <li>
                 <a href="PatientSearchFormServlet">Patient search</a>

@@ -96,13 +96,13 @@ public class DBAO {
         return ret;
     }
     
-    public static ArrayList<PatientSearch> performPatientSearch(String patient_alias, String province, String city)
+    public static ArrayList<PatientSearch> performPatientSearch(String user_alias, String patient_alias, String province, String city)
             throws ClassNotFoundException, SQLException, NamingException {
         
         Connection con = null;
         PreparedStatement pstmt = null;
         ArrayList<PatientSearch> r = new ArrayList<>();
-        String filteredString = null;
+        String filteredString = "";
         
         try {
             con = getConnection();
@@ -110,15 +110,15 @@ public class DBAO {
             // Construct a filtered string for the DB search.
             if (!patient_alias.isEmpty())
             {
-                filteredString += " AND patient_alias LIKE %?%";
+                filteredString += " AND patient_alias LIKE ?";
             }
             
             if (!province.isEmpty()) {
-                filteredString += " AND province LIKE %?%";
+                filteredString += " AND province LIKE ?";
             }
             
             if (!city.isEmpty()) {
-                filteredString += " AND city LIKE %?%";
+                filteredString += " AND city LIKE ?";
             }
             
             String patientSearchQuery = "SELECT pcr.*, fr.friend_alias, fr.accepted"
@@ -135,14 +135,17 @@ public class DBAO {
 
             int num = 0;
             if (!patient_alias.isEmpty()) {
-                pstmt.setString(++num, patient_alias);
+                pstmt.setString(++num, "%"+patient_alias+"%");
             }
             if (!province.isEmpty()) {
-                pstmt.setString(++num, province);
+                pstmt.setString(++num, "%"+province+"%");
             }
             if (!city.isEmpty()) {
-                pstmt.setString(++num, city);
+                pstmt.setString(++num, "%"+city+"%");
             }
+            
+            pstmt.setString(++num, user_alias);
+            pstmt.setString(++num, user_alias);
             
             ResultSet resultSet;
             resultSet = pstmt.executeQuery();
@@ -154,11 +157,11 @@ public class DBAO {
             resultSet.beforeFirst();
             while (resultSet.next()) {
                 PatientSearch ps = new PatientSearch(
-                        resultSet.getString("pc.patient_alias"),
-                        resultSet.getString("pc.city"),
-                        resultSet.getString("pc.province"),
-                        resultSet.getInt("num_reviews"),
-                        resultSet.getString("last_review"),
+                        resultSet.getString("pcr.patient_alias"),
+                        resultSet.getString("pcr.city"),
+                        resultSet.getString("pcr.province"),
+                        resultSet.getInt("pcr.num_reviews"),
+                        resultSet.getString("pcr.last_review"),
                         resultSet.getString("fr.friend_alias"),
                         resultSet.getBoolean("fr.accepted")
                 );

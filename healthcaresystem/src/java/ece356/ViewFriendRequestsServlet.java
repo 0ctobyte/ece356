@@ -30,7 +30,8 @@ public class ViewFriendRequestsServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String url = "/index.jsp";
-        String user_alias = request.getParameter("user_alias");
+        User user = (User)request.getSession().getAttribute("user");
+        String user_alias = user.getUserAlias();
         try {
             ArrayList<FriendRequest> friendRequests = DBAO.getFriendRequests(user_alias);
             request.setAttribute("friendRequests", friendRequests);
