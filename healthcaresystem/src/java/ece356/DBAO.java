@@ -191,11 +191,11 @@ public class DBAO {
                 filteredString += " AND d.gender = ?";
             }
             
-            if (num_years_licensed >= 0){
+            if (num_years_licensed >= Integer.MIN_VALUE && num_years_licensed < Integer.MAX_VALUE){
                 filteredString += " AND num_years_licensed = ?";
             }
             
-            if (street_number > 0){
+            if (street_number >= Integer.MIN_VALUE && street_number < Integer.MAX_VALUE){
                 filteredString += " AND w.street_number = ?";
             }
             
@@ -219,8 +219,8 @@ public class DBAO {
                 filteredString += " AND s.specialization_name LIKE ?";
             }
             
-            if (avg_rating > 0){
-                filteredString += " AND ar.avg_rating = ?";
+            if (avg_rating >= Double.MIN_VALUE && avg_rating < Double.MAX_VALUE){
+                filteredString += " AND ar.avg_rating >= ?";
             }
             
             if (!review_by_friend_alias.isEmpty()){
@@ -271,11 +271,11 @@ public class DBAO {
                 pstmt.setString(++num, gender);
             }
             
-            if (num_years_licensed >= 0){
+            if (num_years_licensed >= Integer.MIN_VALUE && num_years_licensed < Integer.MAX_VALUE){
                 pstmt.setInt(++num, num_years_licensed);
             }
             
-            if (street_number > 0){
+            if (street_number >= Integer.MIN_VALUE && street_number < Integer.MAX_VALUE){
                 pstmt.setInt(++num, street_number);
             }
             
@@ -299,7 +299,7 @@ public class DBAO {
                 pstmt.setString(++num, "%"+specialization+"%");
             }
             
-            if (avg_rating > 0){
+            if (avg_rating >= Double.MIN_VALUE && avg_rating < Double.MAX_VALUE){
                 pstmt.setDouble(++num, avg_rating);
             }
             
