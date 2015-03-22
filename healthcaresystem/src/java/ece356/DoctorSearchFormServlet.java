@@ -32,7 +32,9 @@ public class DoctorSearchFormServlet extends HttpServlet {
         String url = "/index.jsp";
         try {
             ArrayList<String> provinces = DBAO.getProvinces();
+            ArrayList<String> specializations = DBAO.getSpecializations();
             request.setAttribute("provinces", provinces);
+            request.setAttribute("specializations", specializations);
             url = "/doctor_search_form.jsp";
         } catch(Exception e) {
             System.err.println(e.getMessage());

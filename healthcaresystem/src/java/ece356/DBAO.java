@@ -239,7 +239,7 @@ public class DBAO {
             String middle_name, String last_name, String gender, Integer num_years_licensed,
             Integer street_number, String street_name, String postal_code, String city, 
             String province, String specialization, Double avg_rating,
-            String review_by_friend_alias, String keyword)
+            Integer review_by_friend, String keyword)
         throws ClassNotFoundException, SQLException, NamingException {
         
         Connection con = null;
@@ -252,26 +252,26 @@ public class DBAO {
                 
             // Construct a filtered string for the DB search.
             if (!first_name.isEmpty()) {
-                filteredString += " AND u.first_name LIKE ?";
+                filteredString += " AND u.name_first LIKE ?";
             }
 
             if (!middle_name.isEmpty()) {
-                filteredString += " AND u.middle_name LIKE ?";
+                filteredString += " AND u.name_middle LIKE ?";
             }
 
             if (!last_name.isEmpty()) {
-                filteredString += " AND u.last_name LIKE ?";
+                filteredString += " AND u.name_last LIKE ?";
             }
             
             if (!gender.isEmpty()){
                 filteredString += " AND d.gender = ?";
             }
             
-            if (num_years_licensed >= Integer.MIN_VALUE && num_years_licensed < Integer.MAX_VALUE){
+            if (num_years_licensed != Integer.MIN_VALUE){
                 filteredString += " AND num_years_licensed >= ?";
             }
             
-            if (street_number >= Integer.MIN_VALUE && street_number < Integer.MAX_VALUE){
+            if (street_number != Integer.MIN_VALUE){
                 filteredString += " AND w.street_number = ?";
             }
             
@@ -295,35 +295,37 @@ public class DBAO {
                 filteredString += " AND s.specialization_name LIKE ?";
             }
             
-            if (avg_rating >= Double.MIN_VALUE && avg_rating < Double.MAX_VALUE){
+            if (avg_rating != Double.MIN_VALUE){
                 filteredString += " AND ar.avg_rating >= ?";
             }
             
-            if (!review_by_friend_alias.isEmpty()){
-                filteredString += " AND t.reviewed_by_friend LIKE ?";
+            if (review_by_friend != 0){
+                filteredString += " AND t.reviewed_by_friend = ?";
             }
             
             if (!keyword.isEmpty()){
                 filteredString += " AND t.comments COLLATE UTF8_GENERAL_CI LIKE ?";
             }
             
-            String doctorSearchQuery = "DISTINCT d.doctor_alias, u.name_first,"
-                    + " u.name_middle, u.name_last, ar.avg_rating"
-                    + " FROM ((((((Doctor AS d INNER JOIN User AS u"
+            String doctorSearchQuery = "SELECT DISTINCT d.doctor_alias, d.num_years_licensed,"
+                    + " u.name_first, u.name_middle, u.name_last, d.gender,"
+                    + " ar.avg_rating, nr.num_reviews"
+                    + " FROM ((((((((SELECT *, (YEAR(current_timestamp)-license_year) "
+                    + " AS num_years_licensed FROM Doctor) AS d INNER JOIN User AS u"
                     + " ON d.doctor_alias=u.user_alias) NATURAL JOIN"
                     + " Specialization AS s) NATURAL JOIN WorkAddress as w)"
                     + " NATURAL JOIN City AS c) NATURAL JOIN Province as p)"
                     + " LEFT JOIN (SELECT AVG(star_rating - 1) AS avg_rating,"
                     + " doctor_alias FROM Review GROUP BY doctor_alias) AS ar"
-                    + " ON d.doctor_alias, r.comments, fr.accepted AS reviewed_by_friend"
+                    + " ON d.doctor_alias=ar.doctor_alias) INNER JOIN (SELECT"
+                    + " r.doctor_alias, r.comments, fr.accepted AS reviewed_by_friend"
                     + " FROM Review AS r LEFT JOIN (SELECT * FROM FriendRequest"
-                    + " WHERE patient_alias=? OR friend_alias=? AS fr ON"
+                    + " WHERE patient_alias=? OR friend_alias=?) AS fr ON"
                     + " r.patient_alias=fr.patient_alias OR r.patient_alias=fr.friend_alias)"
-                    + " AS t on t.doctor_alias=d.doctor_alias) LEFT JOIN (SELECT"
+                    + " AS t ON t.doctor_alias=d.doctor_alias) LEFT JOIN (SELECT"
                     + " doctor_alias, COUNT(DISTINCT review_id) AS num_reviews"
                     + " FROM Review GROUP BY doctor_alias) AS nr ON"
                     + " d.doctor_alias=nr.doctor_alias WHERE TRUE" + filteredString;
-            
             
             pstmt = con.prepareStatement(doctorSearchQuery);
 
@@ -347,11 +349,11 @@ public class DBAO {
                 pstmt.setString(++num, gender);
             }
             
-            if (num_years_licensed >= Integer.MIN_VALUE && num_years_licensed < Integer.MAX_VALUE){
+            if (num_years_licensed != Integer.MIN_VALUE){
                 pstmt.setInt(++num, num_years_licensed);
             }
             
-            if (street_number >= Integer.MIN_VALUE && street_number < Integer.MAX_VALUE){
+            if (street_number != Integer.MIN_VALUE){
                 pstmt.setInt(++num, street_number);
             }
             
@@ -375,12 +377,12 @@ public class DBAO {
                 pstmt.setString(++num, "%"+specialization+"%");
             }
             
-            if (avg_rating >= Double.MIN_VALUE && avg_rating < Double.MAX_VALUE){
+            if (avg_rating != Double.MIN_VALUE){
                 pstmt.setDouble(++num, avg_rating);
             }
             
-            if (!review_by_friend_alias.isEmpty()){
-                pstmt.setString(++num, "%"+review_by_friend_alias+"%");
+            if (review_by_friend != 0){
+                pstmt.setInt(++num, review_by_friend);
             }
             
             if (!keyword.isEmpty()){
@@ -401,8 +403,9 @@ public class DBAO {
                         resultSet.getString("u.name_first"),
                         resultSet.getString("u.name_middle"),
                         resultSet.getString("u.name_last"),
-                        resultSet.getDouble("ar.avg_rating"),
-                        resultSet.getInt("ar.num_reviews")
+                        resultSet.getString("d.gender"),
+                        resultSet.getInt("nr.num_reviews"),
+                        resultSet.getDouble("ar.avg_rating")
                 );
                 r.add(ds);
             }

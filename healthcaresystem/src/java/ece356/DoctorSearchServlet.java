@@ -31,7 +31,24 @@ public class DoctorSearchServlet extends HttpServlet {
             throws ServletException, IOException {
         String url = "/index.jsp";
         User user = (User)request.getSession().getAttribute("user");
+        String fname = request.getParameter("doctor_search_fname");
+        String mname = request.getParameter("doctor_search_mname");
+        String lname = request.getParameter("doctor_search_lname");
+        String gender = request.getParameter("doctor_search_gender");
+        Integer num_years_licensed = (request.getParameter("doctor_search_#yearslicensed").isEmpty()) ? Integer.MIN_VALUE : Integer.parseInt(request.getParameter("doctor_search_#yearslicensed"));
+        Integer street_num = (request.getParameter("doctor_search_street#").isEmpty()) ? Integer.MIN_VALUE : Integer.parseInt(request.getParameter("doctor_search_street#"));
+        String street_name = request.getParameter("doctor_search_streetname");
+        String postal_code = request.getParameter("doctor_search_postal");
+        String city = request.getParameter("doctor_search_city");
+        String province = request.getParameter("doctor_search_province");
+        String specialization = request.getParameter("doctor_search_specialization");
+        Double avg_rating = (request.getParameter("doctor_search_rating").isEmpty()) ? Double.MIN_VALUE : Double.parseDouble(request.getParameter("doctor_search_rating"));
+        Integer reviewed_by_friend = (request.getParameter("doctor_search_friendreviewed") == null) ? 0 : 1;
+        String keyword = request.getParameter("doctor_search_keyword");
         try {
+            ArrayList<DoctorSearch> ds = (ArrayList<DoctorSearch>)DBAO.performDoctorSearch(user.getUserAlias(), fname, mname, lname, gender, num_years_licensed, street_num, street_name, postal_code, city, province, specialization, avg_rating, reviewed_by_friend, keyword);
+            request.setAttribute("doctorSearchResults", ds);
+            url = "/doctor_search_result.jsp";
         } catch(Exception e) {
             System.err.println(e.getMessage());
         }
