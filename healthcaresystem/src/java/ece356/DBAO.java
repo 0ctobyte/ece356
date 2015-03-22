@@ -216,6 +216,9 @@ public class DBAO {
             pstmt = con.prepareStatement(doctorSearchQuery);
 
             int num = 0;
+            pstmt.setString(++num, user_alias);
+            pstmt.setString(++num, user_alias);
+            
             if (!first_name.isEmpty()) {
                 pstmt.setString(++num, "%"+first_name+"%");
             }
@@ -270,6 +273,25 @@ public class DBAO {
             
             if (!keyword.isEmpty()){
                 pstmt.setString(++num, "%"+keyword+"%");
+            }
+            
+            ResultSet resultSet;
+            resultSet = pstmt.executeQuery();
+
+            if (!resultSet.first()) {
+                return r;
+            }
+
+            resultSet.beforeFirst();
+            while (resultSet.next()) {
+                DoctorSearch ds = new DoctorSearch(
+                        resultSet.getString("d.doctor_alias"),
+                        resultSet.getString("u.name_first"),
+                        resultSet.getString("u.name_middle"),
+                        resultSet.getInt("u.name_last"),
+                        resultSet.getString("ar.avg_rating")
+                );
+                r.add(ds);
             }
             
         } finally {
