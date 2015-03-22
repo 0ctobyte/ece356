@@ -16,7 +16,7 @@
     <body>
         <jsp:useBean id="patientSearchResults" class="java.util.ArrayList" scope="session"/>
         <jsp:useBean id="user" class="ece356.User" scope="session"/>
-        <h1>Patient Search Result</h1>
+        <h1>Patient Search Results</h1>
         <table border=1>
             <tr>
                 <th>alias</th>

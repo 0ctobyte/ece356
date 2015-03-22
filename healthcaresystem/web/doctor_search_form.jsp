@@ -32,7 +32,7 @@
                     <option><%= province %></option>
                 <% } %>
             </select><br><br>
-            # of years licensed: <input type="text" name="doctor_search_#yearslicensed" value="" /><br>
+            # of years licensed: <input type="number" value="0" min="0" step="1" name="doctor_search_#yearslicensed" /><br>
             gender : <select name="doctor_search_gender">
                 <option></option>
                 <option>F</option>
@@ -46,14 +46,7 @@
                     <option><%= specialization %></option>
                 <% } %>
             </select><br>
-            rating: <select name="doctor_search_rating">
-                <option></option>
-                <option value="0">>0</option>
-                <option value="1">>1</option>
-                <option value="2">>2</option>
-                <option value="3">>3</option>
-                <option value="4">>4</option>
-            </select><br>
+            rating threshold: <input type="number" value="0" min="0" max="5" step="0.1" name="doctor_search_rating" /><br>
             reviewed by friend? <input type="checkbox" name="doctor_search_friendreviewed" value="1" /><br>
             keyword: <input type="text" name="doctor_search_keyword" value="" /><br>
             <input type="submit" value="Search" name="doctor_search_go" />

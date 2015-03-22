@@ -223,7 +223,7 @@ public class DBAO {
                 filteredString += " AND ar.avg_rating >= ?";
             }
             
-            if (review_by_friend != Integer.MIN_VALUE){
+            if (review_by_friend != 0){
                 filteredString += " AND t.reviewed_by_friend = ?";
             }
             
@@ -231,9 +231,11 @@ public class DBAO {
                 filteredString += " AND t.comments COLLATE UTF8_GENERAL_CI LIKE ?";
             }
             
-            String doctorSearchQuery = "SELECT DISTINCT d.doctor_alias, u.name_first,"
-                    + " u.name_middle, u.name_last, ar.avg_rating"
-                    + " FROM ((((((Doctor AS d INNER JOIN User AS u"
+            String doctorSearchQuery = "SELECT DISTINCT d.doctor_alias, d.num_years_licensed,"
+                    + " u.name_first, u.name_middle, u.name_last, d.gender,"
+                    + " ar.avg_rating, nr.num_reviews"
+                    + " FROM ((((((((SELECT *, (YEAR(current_timestamp)-license_year) "
+                    + " AS num_years_licensed FROM Doctor) AS d INNER JOIN User AS u"
                     + " ON d.doctor_alias=u.user_alias) NATURAL JOIN"
                     + " Specialization AS s) NATURAL JOIN WorkAddress as w)"
                     + " NATURAL JOIN City AS c) NATURAL JOIN Province as p)"
@@ -242,13 +244,12 @@ public class DBAO {
                     + " ON d.doctor_alias=ar.doctor_alias) INNER JOIN (SELECT"
                     + " r.doctor_alias, r.comments, fr.accepted AS reviewed_by_friend"
                     + " FROM Review AS r LEFT JOIN (SELECT * FROM FriendRequest"
-                    + " WHERE patient_alias=? OR friend_alias=? AS fr ON"
+                    + " WHERE patient_alias=? OR friend_alias=?) AS fr ON"
                     + " r.patient_alias=fr.patient_alias OR r.patient_alias=fr.friend_alias)"
                     + " AS t ON t.doctor_alias=d.doctor_alias) LEFT JOIN (SELECT"
                     + " doctor_alias, COUNT(DISTINCT review_id) AS num_reviews"
                     + " FROM Review GROUP BY doctor_alias) AS nr ON"
                     + " d.doctor_alias=nr.doctor_alias WHERE TRUE" + filteredString;
-            
             
             pstmt = con.prepareStatement(doctorSearchQuery);
 
@@ -304,7 +305,7 @@ public class DBAO {
                 pstmt.setDouble(++num, avg_rating);
             }
             
-            if (review_by_friend != Integer.MIN_VALUE){
+            if (review_by_friend != 0){
                 pstmt.setInt(++num, review_by_friend);
             }
             
@@ -326,6 +327,7 @@ public class DBAO {
                         resultSet.getString("u.name_first"),
                         resultSet.getString("u.name_middle"),
                         resultSet.getString("u.name_last"),
+                        resultSet.getString("d.gender"),
                         resultSet.getInt("nr.num_reviews"),
                         resultSet.getDouble("ar.avg_rating")
                 );
