@@ -288,8 +288,8 @@ public class DBAO {
                         resultSet.getString("d.doctor_alias"),
                         resultSet.getString("u.name_first"),
                         resultSet.getString("u.name_middle"),
-                        resultSet.getInt("u.name_last"),
-                        resultSet.getString("ar.avg_rating")
+                        resultSet.getString("u.name_last"),
+                        resultSet.getDouble("ar.avg_rating")
                 );
                 r.add(ds);
             }
@@ -365,6 +365,7 @@ public class DBAO {
 
             resultSet.beforeFirst();
             while (resultSet.next()) {
+                if(resultSet.getString("pcr.patient_alias").equals(user_alias)) continue;
                 PatientSearch ps = new PatientSearch(
                         resultSet.getString("pcr.patient_alias"),
                         resultSet.getString("pcr.city"),

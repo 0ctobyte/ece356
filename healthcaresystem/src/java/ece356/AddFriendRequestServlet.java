@@ -41,7 +41,7 @@ public class AddFriendRequestServlet extends HttpServlet {
         } catch(Exception e) {
             System.err.println(e.getMessage());
         }
-         if(url.contains(".jsp")) {
+        if(url.contains(".jsp")) {
             getServletContext().getRequestDispatcher(url).forward(request, response);
         } else {
             response.sendRedirect(request.getContextPath()+url);
