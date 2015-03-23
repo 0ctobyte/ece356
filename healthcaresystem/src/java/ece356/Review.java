@@ -13,11 +13,11 @@ public class Review {
     private String name_first;
     private String name_last;
     private String patient_alias;
-    private Integer star_rating;
+    private Double star_rating;
     private String date;
     private String comments;
     
-    public Review(String name_first, String name_last, String patient_alias, Integer star_rating, String date, String comments) {
+    public Review(String name_first, String name_last, String patient_alias, Double star_rating, String date, String comments) {
         this.name_first = name_first;
         this.name_last = name_last;
         this.patient_alias = patient_alias;
@@ -38,7 +38,7 @@ public class Review {
         return this.patient_alias;
     }
     
-    public Integer getStarRating() {
+    public Double getStarRating() {
         return this.star_rating;
     }
     

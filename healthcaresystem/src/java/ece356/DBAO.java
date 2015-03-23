@@ -318,7 +318,7 @@ public class DBAO {
                     + " ON d.doctor_alias=u.user_alias) NATURAL JOIN"
                     + " Specialization AS s) NATURAL JOIN WorkAddress as w)"
                     + " NATURAL JOIN City AS c) NATURAL JOIN Province as p)"
-                    + " LEFT JOIN (SELECT AVG(star_rating - 1) AS avg_rating,"
+                    + " LEFT JOIN (SELECT AVG(star_rating) AS avg_rating,"
                     + " doctor_alias FROM Review GROUP BY doctor_alias) AS ar"
                     + " ON d.doctor_alias=ar.doctor_alias) INNER JOIN (SELECT"
                     + " r.doctor_alias, r.comments, fr.accepted AS reviewed_by_friend"
@@ -642,7 +642,7 @@ public class DBAO {
                 resultSet.getString("u.name_first"),
                 resultSet.getString("u.name_last"),
                 resultSet.getString("r.patient_alias"),
-                resultSet.getInt("r.star_rating"),
+                resultSet.getDouble("r.star_rating"),
                 resultSet.getString("r.date"),
                 resultSet.getString("r.comments")
             );
@@ -917,7 +917,7 @@ public class DBAO {
     }
     
     
-    public static User loginUser(String user_alias, String password_hash)
+    public static User loginUser(String user_alias, String password)
         throws ClassNotFoundException, SQLException, NamingException {
 
         
@@ -928,14 +928,12 @@ public class DBAO {
         try {
             con = getConnection();
                 
-            String userLoginQuery = "SELECT * FROM User WHERE user_alias = ? AND password_hash = ?";
+            String userLoginQuery = "SELECT * FROM User WHERE user_alias = ?";
             pstmt = con.prepareStatement(userLoginQuery);
             
             pstmt.setString(1, user_alias);
-            pstmt.setString(2, password_hash);
 
             ResultSet resultSet = pstmt.executeQuery();
-            
                         
             if(!resultSet.first()) throw new RuntimeException("Cannot login user with alias: " + user_alias);
              
@@ -947,23 +945,20 @@ public class DBAO {
                     resultSet.getString("User.name_middle"),
                     resultSet.getString("User.name_last"),
                     (resultSet.getString("User.account_type").equals("Doctor")) ? User.AccountType.Doctor : User.AccountType.Patient
-            );            
-        } finally {
-                if (pstmt != null) {
-                    pstmt.close();
-                }
-                if (con != null) {
-                    con.close();
-                }
+            );
+            
+            if(BCrypt.checkpw(password, u.getPasswordHash())) {
+                return u;
+            } else {
+                throw new RuntimeException("Invalid password");
             }
-        
-        // password_hash is the the text input given by the user from the GUI
-        // u.getPasswordHash() checks password_hash against the user's stored
-        // password in the DB
-        if (BCrypt.checkpw(password_hash, u.getPasswordHash())) {
-            return u;
-        } else {
-            throw new RuntimeException("Password does not match. Denied Access.");
-        }        
+        } finally {
+            if (pstmt != null) {
+                pstmt.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
     }
 }
