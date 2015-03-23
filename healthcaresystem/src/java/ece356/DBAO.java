@@ -204,7 +204,7 @@ public class DBAO {
         try {
             con = getConnection();
 
-            String dpQuery = "SELECT * FROM PatientDoctorProfile WHERE user_alias = ?";
+            String dpQuery = "SELECT * FROM PatientDoctorProfileView WHERE user_alias = ?";
 
             pstmt = con.prepareStatement(dpQuery);
             pstmt.setString(1, selected_doctor_alias);

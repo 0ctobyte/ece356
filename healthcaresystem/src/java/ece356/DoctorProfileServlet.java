@@ -33,7 +33,7 @@ public class DoctorProfileServlet extends HttpServlet {
         User user = (User)request.getSession().getAttribute("user");
         String doctor_alias = user.getUserAlias();
         try {
-            DoctorProfile docProfile = DBAO.patientDoctorProfileView(doctor_alias);
+            DoctorProfile docProfile = DBAO.doctorOwnProfileView(doctor_alias);
             ArrayList<Specialization> specializations = DBAO.getSpecializations(doctor_alias);
             ArrayList<WorkAddress> workAddresses = DBAO.getWorkAddresses(doctor_alias);
             ArrayList<Integer> reviewIDs = DBAO.getReviewIDs(doctor_alias);
