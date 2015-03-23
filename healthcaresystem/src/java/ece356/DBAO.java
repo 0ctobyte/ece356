@@ -11,6 +11,8 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
+
+import org.mindrot.jbcrypt.BCrypt;
 /**
  *
  * @author sekharb
@@ -923,7 +925,6 @@ public class DBAO {
         PreparedStatement pstmt = null;
         
         User u;
-        
         try {
             con = getConnection();
                 
@@ -946,8 +947,7 @@ public class DBAO {
                     resultSet.getString("User.name_middle"),
                     resultSet.getString("User.name_last"),
                     (resultSet.getString("User.account_type").equals("Doctor")) ? User.AccountType.Doctor : User.AccountType.Patient
-            );
-            
+            );            
         } finally {
                 if (pstmt != null) {
                     pstmt.close();
@@ -956,9 +956,11 @@ public class DBAO {
                     con.close();
                 }
             }
-               
-        return u;
         
+        if (BCrypt.checkpw(password_hash, u.getPasswordHash())) {
+            return u;
+        } else {
+            throw new RuntimeException("Password does not match. Denied Access.");
+        }        
     }
-    
 }
