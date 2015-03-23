@@ -28,13 +28,21 @@ public class WriteReviewFormServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String url = "/index.jsp";
+        String url = "/invalid_access.jsp";
+        User user = (User)request.getSession().getAttribute("user");
         try {
+            if(user == null) throw new RuntimeException("Not logged in");
+            if(user.getAccountType() != User.AccountType.Patient) throw new RuntimeException("Unauthorized Access");
             String doctor_alias = request.getParameter("doctor_alias");
             request.getSession().setAttribute("review_doctor_alias", doctor_alias);
             url = "/write_review_form.jsp";
         } catch(Exception e) {
             System.err.println(e.getMessage());
+            if(e.getMessage().equals("Unauthorized Access")) {
+                url = "/unauthorized.jsp";
+            } else if(e.getMessage().equals("Not logged in")) {
+                url = "/LoginServlet";
+            }
         }
         getServletContext().getRequestDispatcher(url).forward(request, response);
     }

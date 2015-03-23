@@ -56,6 +56,10 @@
         <servlet-name>AddReviewServlet</servlet-name>
         <servlet-class>ece356.AddReviewServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>LogoutServlet</servlet-name>
+        <servlet-class>ece356.LogoutServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/LoginServlet</url-pattern>
@@ -111,6 +115,10 @@
     <servlet-mapping>
         <servlet-name>AddReviewServlet</servlet-name>
         <url-pattern>/AddReviewServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LogoutServlet</servlet-name>
+        <url-pattern>/LogoutServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

@@ -31,6 +31,6 @@
                 <a href="DoctorSearchFormServlet">Doctor search</a>
             </li>
         </ul>
-        
+        <a href="LogoutServlet">Logout</a>
     </body>
 </html>

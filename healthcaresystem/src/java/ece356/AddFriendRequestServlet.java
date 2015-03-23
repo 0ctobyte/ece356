@@ -29,17 +29,24 @@ public class AddFriendRequestServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String url = "/index.jsp";
+        String url = "/invalid_access.jsp";
         String friend_alias = request.getParameter("friend_alias");
         Integer index = Integer.parseInt(request.getParameter("index"));
         User user = (User)request.getSession().getAttribute("user");
         try {
+            if(user == null) throw new RuntimeException("Not logged in");
+            if(user.getAccountType() != User.AccountType.Patient) throw new RuntimeException("Unauthorized Access");
             DBAO.addFriendRequest(user.getUserAlias(), friend_alias);
             ArrayList<PatientSearch> ps = (ArrayList<PatientSearch>)request.getSession().getAttribute("patientSearchResults");
             ps.get(index).setFriendAlias(friend_alias);
             url = "/PatientSearchServlet?update=true";
         } catch(Exception e) {
             System.err.println(e.getMessage());
+            if(e.getMessage().equals("Unauthorized Access")) {
+                url = "/unauthorized.jsp";
+            } else if(e.getMessage().equals("Not logged in")) {
+                url = "/LoginServlet";
+            }
         }
         if(url.contains(".jsp")) {
             getServletContext().getRequestDispatcher(url).forward(request, response);

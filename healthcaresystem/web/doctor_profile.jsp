@@ -61,5 +61,6 @@
             <a href="WriteReviewFormServlet?doctor_alias=<%= doctorProfile.getDoctorAlias() %>">Write review</a><br>
             <a href="PatientProfileServlet">Profile</a>
         <% } %>
+        <a href="LogoutServlet">Logout</a>
     </body>
 </html>

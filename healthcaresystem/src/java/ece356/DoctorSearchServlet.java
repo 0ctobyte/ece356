@@ -29,7 +29,7 @@ public class DoctorSearchServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String url = "/index.jsp";
+        String url = "/invalid_access.jsp";
         User user = (User)request.getSession().getAttribute("user");
         String fname = request.getParameter("doctor_search_fname");
         String mname = request.getParameter("doctor_search_mname");
@@ -46,11 +46,18 @@ public class DoctorSearchServlet extends HttpServlet {
         Integer reviewed_by_friend = (request.getParameter("doctor_search_friendreviewed") == null) ? 0 : 1;
         String keyword = request.getParameter("doctor_search_keyword");
         try {
+            if(user == null) throw new RuntimeException("Not logged in");
+            if(user.getAccountType() != User.AccountType.Patient) throw new RuntimeException("Unauthorized Access");
             ArrayList<DoctorSearch> ds = (ArrayList<DoctorSearch>)DBAO.performDoctorSearch(user.getUserAlias(), fname, mname, lname, gender, num_years_licensed, street_num, street_name, postal_code, city, province, specialization, avg_rating, reviewed_by_friend, keyword);
             request.setAttribute("doctorSearchResults", ds);
             url = "/doctor_search_result.jsp";
         } catch(Exception e) {
             System.err.println(e.getMessage());
+            if(e.getMessage().equals("Unauthorized Access")) {
+                url = "/unauthorized.jsp";
+            } else if(e.getMessage().equals("Not logged in")) {
+                url = "/LoginServlet";
+            }
         }
         getServletContext().getRequestDispatcher(url).forward(request, response);
     }

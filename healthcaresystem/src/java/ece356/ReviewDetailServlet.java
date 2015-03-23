@@ -28,9 +28,11 @@ public class ReviewDetailServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String url = "/index.jsp";
+        String url = "/invalid_access.jsp";
         String s_rid = request.getParameter("rid");
+        User user = (User)request.getSession().getAttribute("user");
         try {
+            if(user == null) throw new RuntimeException("Not logged in");
             Integer rid = Integer.parseInt(s_rid);
             if(rid <= 0) throw new RuntimeException("Review ID out of range");
             Review review = DBAO.getReview(rid);
@@ -40,6 +42,9 @@ public class ReviewDetailServlet extends HttpServlet {
             url = "/review_detail.jsp";
         } catch(Exception e) {
             System.err.println(e.getMessage());
+            if(e.getMessage().equals("Not logged in")) {
+                url = "/LoginServlet";
+            }
         }
         getServletContext().getRequestDispatcher(url).forward(request, response);
     }

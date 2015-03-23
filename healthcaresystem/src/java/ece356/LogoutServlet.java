@@ -6,7 +6,7 @@
 package ece356;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author sekharb
  */
-public class ConfirmFriendServlet extends HttpServlet {
+public class LogoutServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -29,37 +29,8 @@ public class ConfirmFriendServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String url = "/invalid_access.jsp";
-        String friend_alias = request.getParameter("friend_alias");
-        Integer id = Integer.parseInt(request.getParameter("id"));
-        User user = (User)request.getSession().getAttribute("user");
-        try {
-            if(user == null) throw new RuntimeException("Not logged in");
-            if(user.getAccountType() != User.AccountType.Patient) throw new RuntimeException("Unauthorized Access");
-            DBAO.confirmFriendRequest(user.getUserAlias(), friend_alias);
-            if(id == 0) {
-                String confirm_msg = "You are now friends with " + friend_alias + "!";
-                request.setAttribute("confirm_msg", confirm_msg);
-                url = "/ViewFriendRequestsServlet";
-            } else {
-                ArrayList<PatientSearch> ps = (ArrayList<PatientSearch>)request.getSession().getAttribute("patientSearchResults");
-                Integer index = Integer.parseInt(request.getParameter("index"));
-                ps.get(index).setAccepted(true);
-                url = "/PatientSearchServlet?update=true";
-            }
-        } catch(Exception e) {
-            System.err.println(e.getMessage());
-            if(e.getMessage().equals("Unauthorized Access")) {
-                url = "/unauthorized.jsp";
-            } else if(e.getMessage().equals("Not logged in")) {
-                url = "/LoginServlet";
-            }
-        }
-        if(url.contains(".jsp")) {
-            getServletContext().getRequestDispatcher(url).forward(request, response);
-        } else {
-            response.sendRedirect(request.getContextPath()+url);
-        }
+        request.getSession().invalidate();
+        response.sendRedirect(request.getContextPath()+"/LoginServlet?id=0");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

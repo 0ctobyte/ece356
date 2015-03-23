@@ -31,30 +31,36 @@ public class LoginServlet extends HttpServlet {
             throws ServletException, IOException {
         String url = "/index.jsp";
         String queryID = request.getParameter("id");
-        if(queryID != null && queryID.equals("0")) {
-            url = "/login_page.jsp";
-        } else {
-            String user_alias = request.getParameter("user_alias");
-            String password = request.getParameter("user_pwd");
-            try {
-                if(user_alias.isEmpty() || password.isEmpty()) {
-                    throw new RuntimeException("user_alias and/or password_hash is empty");
-                }
-                
-                // loginUser throws runtime exception if user DNE
-                User user = DBAO.loginUser(user_alias, password);
-                request.getSession().setAttribute("user", user);
-                
+        User user = (User)request.getSession().getAttribute("user");
+        try {
+            if(user != null) {
                 if(user.getAccountType() == User.AccountType.Doctor) {
                     url = "/DoctorProfileServlet";
                 } else {
                     url = "/PatientProfileServlet";
                 }
-            } catch(Exception e) {
-                System.err.println(e.getMessage());
-                request.setAttribute("login_msg", "Invalid username or password");
+            } else if(queryID != null && queryID.equals("0")) {
                 url = "/login_page.jsp";
+            } else {
+                String user_alias = request.getParameter("user_alias");
+                String password = request.getParameter("user_pwd");
+                if(user_alias.isEmpty() || password.isEmpty()) {
+                    throw new RuntimeException("user_alias and/or password_hash is empty");
+                }
+                // loginUser throws runtime exception if user DNE
+                user = DBAO.loginUser(user_alias, password);
+                request.getSession().setAttribute("user", user);
+
+                if(user.getAccountType() == User.AccountType.Doctor) {
+                    url = "/DoctorProfileServlet";
+                } else {
+                    url = "/PatientProfileServlet";
+                }
             }
+        } catch(Exception e) {
+            System.err.println(e.getMessage());
+            request.setAttribute("login_msg", "Invalid username or password");
+            url = "/login_page.jsp";
         }
         if(url.contains(".jsp")) {
             getServletContext().getRequestDispatcher(url).forward(request, response);

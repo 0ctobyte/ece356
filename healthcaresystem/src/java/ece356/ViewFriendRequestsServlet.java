@@ -29,10 +29,12 @@ public class ViewFriendRequestsServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String url = "/index.jsp";
+        String url = "/invalid_access.jsp";
         User user = (User)request.getSession().getAttribute("user");
-        String user_alias = user.getUserAlias();
         try {
+            if(user == null) throw new RuntimeException("Not logged in");
+            if(user.getAccountType() != User.AccountType.Patient) throw new RuntimeException("Unauthorized Access");
+            String user_alias = user.getUserAlias();
             ArrayList<FriendRequest> friendRequests = DBAO.getFriendRequests(user_alias);
             request.setAttribute("friendRequests", friendRequests);
             if(friendRequests.isEmpty()) {
@@ -42,6 +44,11 @@ public class ViewFriendRequestsServlet extends HttpServlet {
             url = "/view_friend_requests.jsp";
         } catch(Exception e) {
             System.err.println(e.getMessage());
+            if(e.getMessage().equals("Unauthorized Access")) {
+                url = "/unauthorized.jsp";
+            } else if(e.getMessage().equals("Not logged in")) {
+                url = "/LoginServlet";
+            }
         }
         getServletContext().getRequestDispatcher(url).forward(request, response);
     }

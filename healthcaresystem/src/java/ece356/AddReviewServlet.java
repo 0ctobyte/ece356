@@ -28,12 +28,14 @@ public class AddReviewServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String url = "/index.jsp";
+        String url = "/invalid_access.jsp";
         User user = (User)request.getSession().getAttribute("user");
         String doctor_alias = (String)request.getSession().getAttribute("review_doctor_alias");
         String rating = request.getParameter("add_review_rating");
         String comments = request.getParameter("add_review_comments");
         try {
+            if(user == null) throw new RuntimeException("Not logged in");
+            if(user.getAccountType() != User.AccountType.Patient) throw new RuntimeException("Unauthorized Access");
             if(comments.isEmpty()) {
                 String wreview_msg = "Comments field must not be empty!";
                 request.setAttribute("wreview_msg", wreview_msg);
@@ -44,6 +46,11 @@ public class AddReviewServlet extends HttpServlet {
             }
         } catch(Exception e) {
             System.err.println(e.getMessage());
+            if(e.getMessage().equals("Unauthorized Access")) {
+                url = "/unauthorized.jsp";
+            } else if(e.getMessage().equals("Not logged in")) {
+                url = "/LoginServlet";
+            }
         }
         if(url.contains(".jsp")) {
             getServletContext().getRequestDispatcher(url).forward(request, response);

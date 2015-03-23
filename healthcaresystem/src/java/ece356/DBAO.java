@@ -948,7 +948,8 @@ public class DBAO {
             );
             
             if(BCrypt.checkpw(password, u.getPasswordHash())) {
-                return u;
+                // Remove the password
+                return new User(u.getUserAlias(), u.getEmail(), null, u.getFirstName(), u.getMiddleName(), u.getLastName(), u.getAccountType());
             } else {
                 throw new RuntimeException("Invalid password");
             }

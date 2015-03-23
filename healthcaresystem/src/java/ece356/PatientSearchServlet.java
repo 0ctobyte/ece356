@@ -29,13 +29,15 @@ public class PatientSearchServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String url = "/index.jsp";
+        String url = "/invalid_access.jsp";
         User user = (User)request.getSession().getAttribute("user");
         String patient_alias = request.getParameter("patient_search_alias");
         String city = request.getParameter("patient_search_city");
         String province = request.getParameter("patient_search_province");
         String update = request.getParameter("update");
         try {
+            if(user == null) throw new RuntimeException("Not logged in");
+            if(user.getAccountType() != User.AccountType.Patient) throw new RuntimeException("Unauthorized Access");
             if(update != null && update.equals("true")) {
                 // The search has already been performed and is in the session
                 // Just redisplay the search result page
@@ -47,6 +49,11 @@ public class PatientSearchServlet extends HttpServlet {
             }
         } catch(Exception e) {
             System.err.println(e.getMessage());
+            if(e.getMessage().equals("Unauthorized Access")) {
+                url = "/unauthorized.jsp";
+            } else if(e.getMessage().equals("Not logged in")) {
+                url = "/LoginServlet";
+            }
         }
         getServletContext().getRequestDispatcher(url).forward(request, response);
     }
