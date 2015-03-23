@@ -928,7 +928,7 @@ public class DBAO {
         try {
             con = getConnection();
                 
-            String userLoginQuery = "SELECT * FROM User WHERE user_alias = ? AND password_hash = password(?)";
+            String userLoginQuery = "SELECT * FROM User WHERE user_alias = ? AND password_hash = ?";
             pstmt = con.prepareStatement(userLoginQuery);
             
             pstmt.setString(1, user_alias);
@@ -957,6 +957,9 @@ public class DBAO {
                 }
             }
         
+        // password_hash is the the text input given by the user from the GUI
+        // u.getPasswordHash() checks password_hash against the user's stored
+        // password in the DB
         if (BCrypt.checkpw(password_hash, u.getPasswordHash())) {
             return u;
         } else {
