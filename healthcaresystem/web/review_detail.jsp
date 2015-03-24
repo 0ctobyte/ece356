@@ -33,25 +33,24 @@
             <div class="page-header">
                 <h1>Health Care System <small><small>An ECE356 Database Design Project</small></small></h1>
             </div>
-            <h3>Review Detail</h3>
+            <h3>Review Detail <small><%= review.getFirstName() + " " + review.getLastName() %></small></h3>
+            <h4><%= review.getStarRating() %> <small>By <%= review.getPatientAlias() %> on <%= review.getDate() %></small></h4>
             <br>
-            <%= review.getFirstName() + " " + review.getLastName() %><br>
-            Rating: <%= review.getStarRating() %><br>
-            By <%= review.getPatientAlias() %> on <%= review.getDate() %><br>
+            <p><%= review.getComments() %></p>
             <br>
-            <%= review.getComments() %><br>
-            <br>
-            <% if(prev_rid > 0) { %>
-                <a href="ReviewDetailServlet?rid=<%=prev_rid%>">prev</a>
-            <% } %>
-            <% if(next_rid > 0) { %>
-                <a href="ReviewDetailServlet?rid=<%=next_rid%>">next</a>
-            <% } %>
+            <ul class="list-inline">
+                <% if(prev_rid > 0) { %>
+                    <li><a href="ReviewDetailServlet?rid=<%=prev_rid%>">prev</a></li>
+                <% } %>
+                <% if(next_rid > 0) { %>
+                    <li><a href="ReviewDetailServlet?rid=<%=next_rid%>">next</a></li>
+                <% } %>
+            </ul>
             <br>
             <% if(user.getAccountType() == User.AccountType.Doctor) { %>
-                <a href="DoctorProfileServlet">Profile</a>
+                <a href="DoctorProfileServlet" class="btn btn-success" role="button" >My Profile</a>
             <% } else { %>
-                <a href="PatientProfileServlet">Profile</a>
+                <a href="PatientProfileServlet" class="btn btn-success" role="button" >My Profile</a>
             <% } %>
         </div>
     </body>

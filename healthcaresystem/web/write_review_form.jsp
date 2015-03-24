@@ -30,17 +30,20 @@
             <div class="page-header">
                 <h1>Health Care System <small><small>An ECE356 Database Design Project</small></small></h1>
             </div>
-            <h3>Write Review</h3>
+            <h3>Write Review <small><%= review_doctor_alias %></small></h3>
             <br>
             <h5><%= review_doctor_alias %></h5>
             <form name="add_review_form" action="AddReviewServlet" method="POST">
             <div class="row">
                 <div class="col-xs-2">
-                    rating: <select name="add_review_rating">
-                        <% for (Double i = 0.0; i <= 5.0; i += 0.5) {%>
-                        <option><%= i%></option>
-                        <% } %>
-                    </select> 
+                    <div class="form-group">
+                        <label>Give a rating:</label>
+                        <select class="form-control input-sm" name="add_review_rating">
+                            <% for (Double i = 0.0; i <= 5.0; i += 0.5) {%>
+                            <option><%= i%></option>
+                            <% } %>
+                        </select>
+                    </div>
                 </div>
             </div>
             <br>
@@ -49,7 +52,7 @@
                     <% if (wreview_msg != null) {%>
                     <div class="alert alert-warning"><%= wreview_msg%></div>
                     <% }%>
-                    <textarea class="form-control input-sm" name="add_review_comments" rows="4" cols="20"></textarea><br>
+                    <textarea class="form-control input-sm" name="add_review_comments" rows="4" cols="20" placeholder="Write a comment..."></textarea><br>
                 </div>
             </div>
             <div class="row">

@@ -40,10 +40,10 @@
             </div>
             
             <h3><%= doctorProfile.getFirstName() + " " + doctorProfile.getLastName() %> <small><%= doctorProfile.getDoctorAlias() %></small></h3>
-            <br>
             <% if(user.getAccountType() == User.AccountType.Doctor) { %>
-            <p><b>Email:</b> <%= doctorProfile.getEmail() %></p>
+                <h4><small><%= doctorProfile.getEmail() %></small></h4>
             <% }%>
+            <br>
             <table class="table table-hover">
                 <tr>
                     <th>Gender</th>
@@ -96,10 +96,13 @@
             <% if (user.getAccountType() == user.getAccountType().Patient) {%>
                 <ul class="list-inline">
                     <li><a href="WriteReviewFormServlet?doctor_alias=<%= doctorProfile.getDoctorAlias()%>">Write a review</a></li>
-                    <li><a href="PatientProfileServlet">Profile</a></li>
                 </ul><br>
             <% }%>
-            <a href="LogoutServlet" class="btn btn-danger" role="button">Logout</a>
+            <% if(user.getAccountType() == User.AccountType.Doctor) { %>
+                <a href="LogoutServlet" class="btn btn-danger" role="button">Logout</a>
+            <% } else { %>
+                <a href="PatientProfileServlet" class="btn btn-success" role="button" >My Profile</a>
+            <% } %>
         </div>
     </body>
 </html>

@@ -30,22 +30,25 @@
                 <h1>Health Care System <small><small>An ECE356 Database Design Project</small></small></h1>
             </div>
             <form name="login_form" action="LoginServlet" method="POST">
-                <div class="form-group">
-                    <div class="input-group">
-                        <div class="input-group-addon">username</div>
-                        <input type="text" name="user_alias" class="form-control input-sm" />
-                    </div>
-                    <div class="input-group">
-                        <div class="input-group-addon">password</div>
-                        <input type="password" name="user_pwd" class="form-control input-sm" />
+                <div class="row">
+                    <div class="col-xs-3">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-addon">username</div>
+                                <input type="text" name="user_alias" class="form-control input-sm" />
+                            </div>
+                            <br>
+                            <div class="input-group">
+                                <div class="input-group-addon">password</div>
+                                <input type="password" name="user_pwd" class="form-control input-sm" />
+                            </div>
+                        </div>
+                        <% if (login_msg != null) {%>
+                        <div class="alert alert-danger"><strong>Error!</strong> <%= login_msg%></div>
+                        <% }%>
+                        <input type="submit" value="Log in" class="btn btn-primary btn-xs-6"/>
                     </div>
                 </div>
-                
-                <% if (login_msg != null) {%>
-                    <div class="alert alert-danger"><strong>Error!</strong> <%= login_msg %></div>
-                <% } %>
-                
-                <input type="submit" value="Sign in" class="btn btn-primary"/>
             </form> 
         </div>
     </body>
