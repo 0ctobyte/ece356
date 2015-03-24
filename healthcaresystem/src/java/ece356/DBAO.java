@@ -20,7 +20,7 @@ import org.mindrot.jbcrypt.BCrypt;
 public class DBAO {
     public static final String host = "eceweb.uwaterloo.ca";
     public static final String url = "jdbc:mysql://" + host + ":3306/";
-    public static final String nid = "s4bhatta";
+    public static final String nid = "rsawhney";
     public static final String user = "user_" + nid;
     public static final String pwd = "user_" + nid;
     
