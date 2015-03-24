@@ -72,8 +72,14 @@ create view DoctorNumReviewView as select doctor_alias, count(review_id) as num_
 drop view if exists DoctorFlexSearchView;
 create view DoctorFlexSearchView as select d.doctor_alias, u.name_first, u.name_middle, u.name_last, d.gender, w.postal_code, c.city, p.province, s.specialization_name, (YEAR(current_timestamp)-d.license_year) as num_years_licensed, IFNULL(ar.avg_rating, 0) as avg_rating, IFNULL(nr.num_reviews, 0) as num_reviews, r.comments, r.patient_alias as reviewer_alias, fr.accepted, fr.patient_alias, fr.friend_alias from Doctor as d inner join User as u on u.user_alias=d.doctor_alias natural join WorkAddress as w natural join City as c natural join Province as p natural join Specialization as s left join DoctorNumReviewView as nr on nr.doctor_alias=d.doctor_alias left join DoctorAvgRatingView as ar on ar.doctor_alias=d.doctor_alias left join Review as r on r.doctor_alias=d.doctor_alias left join FriendRequest as fr on ((fr.patient_alias=r.patient_alias or fr.friend_alias=r.patient_alias) and fr.accepted=1);
 
+drop view if exists PatientNumReviewView;
+create view PatientNumReviewView as select count(review_id) as num_reviews, patient_alias from Review group by patient_alias;
+
+drop view if exists PatientLastReviewView;
+create view PatientLastReviewView as select MAX(date) as last_review, patient_alias from Review group by patient_alias;
+
 drop view if exists PatientSearchView;
-create view PatientSearchView as select u.patient_alias, c.city, p.province, p.province_name, fr.patient_alias as requestor_alias, fr.friend_alias as requestee_alias, fr.accepted from Patient as u natural join City as c natural join Province as p left join FriendRequest as fr on fr.patient_alias=u.patient_alias or fr.friend_alias=u.patient_alias;
+create view PatientSearchView as select u.patient_alias, c.city, p.province, p.province_name, IFNULL(nr.num_reviews,0) as num_reviews, lr.last_review, fr.patient_alias as requestor_alias, fr.friend_alias as requestee_alias, fr.accepted from Patient as u natural join City as c natural join Province as p left join FriendRequest as fr on fr.patient_alias=u.patient_alias or fr.friend_alias=u.patient_alias left join PatientLastReviewView as lr on lr.patient_alias=u.patient_alias left join PatientNumReviewView as nr on nr.patient_alias=u.patient_alias;
 
 /* data operations */
 
@@ -84,7 +90,7 @@ create view PatientSearchView as select u.patient_alias, c.city, p.province, p.p
 		accepted == 0 && friend_alias == B => Patient A must wait for Patient B to accept friend request 
 		accepted == NULL => Neither patient A nor  patiend B have added each other
 */
-select pcr.*, fr.friend_alias, fr.accepted from (select pc.*, count(distinct review_id) as num_reviews, max(r.date) as last_review from (select p.patient_alias, c.city, c.province from Patient as p natural join City as c where patient_alias='<patient_alias>' and city='<city>' and province='<province>') as pc left join Review as r on r.patient_alias=pc.patient_alias group by patient_alias) as pcr left join FriendRequest as fr on (fr.patient_alias='<current_user_alias>' and fr.friend_alias=pcr.patient_alias) or (fr.patient_alias=pcr.patient_alias and fr.friend_alias='<current_user_alias>');
+select * from PatientSearchView where patient_alias='<patient_alias>' and city='<city>' and province='<province>';
 
 /* O2. Patient add friend */
 select friend_alias, accepted from FriendRequest where patient_alias='<current_user_alias>';
