@@ -42,7 +42,7 @@
                         <input type="text" class="form-control input-sm" name="doctor_search_lname" value="" />
                     </div>
                     <div class="input-group">
-                        <div class="input-group-addon">years licensed</div>
+                        <div class="input-group-addon">min years licensed</div>
                         <input type="number" class="form-control input-sm" value="0" min="0" step="1" name="doctor_search_#yearslicensed" />
                     </div>
                     <select class="form-control input-sm" name="doctor_search_gender">
