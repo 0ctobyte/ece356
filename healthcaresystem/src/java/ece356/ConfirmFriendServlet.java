@@ -38,9 +38,11 @@ public class ConfirmFriendServlet extends HttpServlet {
             if(user.getAccountType() != User.AccountType.Patient) throw new RuntimeException("Unauthorized Access");
             DBAO.confirmFriendRequest(user.getUserAlias(), friend_alias);
             if(id == 0) {
+                ArrayList<FriendRequest> friendRequests = DBAO.getFriendRequests(user.getUserAlias());
+                request.setAttribute("friendRequests", friendRequests);
                 String confirm_msg = "You are now friends with " + friend_alias + "!";
                 request.setAttribute("confirm_msg", confirm_msg);
-                url = "/ViewFriendRequestsServlet";
+                url = "/view_friend_requests.jsp";
             } else {
                 ArrayList<PatientSearch> ps = (ArrayList<PatientSearch>)request.getSession().getAttribute("patientSearchResults");
                 Integer index = Integer.parseInt(request.getParameter("index"));
@@ -49,7 +51,9 @@ public class ConfirmFriendServlet extends HttpServlet {
             }
         } catch(Exception e) {
             System.err.println(e.getMessage());
-            if(e.getMessage().equals("Unauthorized Access")) {
+            if(e.getMessage() == null) {
+                url = "/invalid_access.jsp";
+            } else if(e.getMessage().equals("Unauthorized Access")) {
                 url = "/unauthorized.jsp";
             } else if(e.getMessage().equals("Not logged in")) {
                 url = "/LoginServlet";

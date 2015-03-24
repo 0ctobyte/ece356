@@ -10,44 +10,100 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>HealthCareSystem | Doctor Search</title>
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
+        <style type="text/css">
+            .bs-example{
+                margin: 20px;
+            }
+        </style>
     </head>
     <body>
         <jsp:useBean id="provinces" class="java.util.ArrayList" scope="request"/>
         <jsp:useBean id="specializations" class="java.util.ArrayList" scope="request"/>
         <jsp:useBean id="user" class="ece356.User" scope="session"/>
-        <h1>Doctor Search</h1>
-        <form name="doctor_search_form" action="DoctorSearchServlet" method="POST">
-            first name: <input type="text" name="doctor_search_fname" value="" /><br>
-            last name: <input type="text" name="doctor_search_lname" value="" /><br><br>
-            # of years licensed: <input type="number" value="0" min="0" step="1" name="doctor_search_#yearslicensed" /><br>
-            gender : <select name="doctor_search_gender">
-                <option></option>
-                <option>F</option>
-                <option>M</option>
-            </select><br>
-            specialization: <select name="doctor_search_specialization">
-                <option></option>
-                <% for(Object o: specializations) {
-                    String specialization = (String)o;
-                %>
-                    <option><%= specialization %></option>
-                <% } %>
-            </select><br><br>
-            postal code: <input type="text" name="doctor_search_postal" value="" /><br>
-            city: <input type="text" name="doctor_search_city" value="" /><br>
-            province: <select name="doctor_search_province">
-                <option></option>
-                <% for(Object o: provinces) {
-                    String province = (String)o;
-                %>
-                    <option><%= province %></option>
-                <% } %>
-            </select><br><br>
-            rating threshold: <input type="number" value="0" min="0" max="5" step="0.1" name="doctor_search_rating" /><br>
-            reviewed by friend? <input type="checkbox" name="doctor_search_friendreviewed" value="1" /><br>
-            keyword: <input type="text" name="doctor_search_keyword" value="" /><br>
-            <input type="submit" value="Search" name="doctor_search_go" />
-        </form>
-        <a href="PatientProfileServlet">Profile</a>
+        <div class="bs-example">
+            <div class="page-header">
+                <h1>Health Care System<small><small> An ECE356 Database Design Project</small></small></h1>
+            </div>
+            <h3>Doctor Search</h3>
+            <br>
+            <form name="doctor_search_form" action="DoctorSearchServlet" method="POST">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon">first name</div>
+                        <input type="text" class="form-control input-sm" name="doctor_search_fname" value="" />
+                        <div class="input-group-addon">last name</div>
+                        <input type="text" class="form-control input-sm" name="doctor_search_lname" value="" />
+                    </div>
+                    <div class="input-group">
+                        <div class="input-group-addon">years licensed</div>
+                        <input type="number" class="form-control input-sm" value="0" min="0" step="1" name="doctor_search_#yearslicensed" />
+                    </div>
+                    <select class="form-control input-sm" name="doctor_search_gender">
+                        <option value="" disabled selected >gender</option>
+                        <option>F</option>
+                        <option>M</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <select class="form-control input-sm" name="doctor_search_specialization">
+                        <option value="" disabled selected >specialization</option>
+                        <% for(Object o: specializations) {
+                            String specialization = (String)o;
+                        %>
+                            <option><%= specialization %></option>
+                        <% } %>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon">postal code</div>
+                        <input type="text" class="form-control input-sm" name="doctor_search_postal" value="" />
+                        <div class="input-group-addon">city</div>
+                        <input type="text" class="form-control input-sm" name="doctor_search_city" value="" />
+                    </div>
+                    <select class="form-control input-sm" name="doctor_search_province">
+                        <option value="" disabled selected >province</option>
+                        <% for(Object o: provinces) {
+                            String province = (String)o;
+                        %>
+                            <option><%= province %></option>
+                        <% } %>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon">keyword</div>
+                        <input type="text" class="form-control input-sm" name="doctor_search_keyword" value="" />
+                    </div>
+                    <div class="input-group">
+                        <div class="input-group-addon">min rating</div>
+                        <input type="number" class="form-control input-sm" value="0" min="0" max="5" step="0.1" name="doctor_search_rating" /><br>
+                    </div>
+                </div>
+                
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" name="doctor_search_friendreviewed" value="1" />
+                        reviewed by a friend?
+                    </label>
+                </div>
+                  
+                <div>
+                    <input type="submit" value="Search" class="btn btn-primary bt-xs"/>
+                </div>
+            </form>
+            <br><br>
+            <a href="PatientProfileServlet" class="btn btn-success" role="button">My Profile</a>
+        </div>
     </body>
 </html>

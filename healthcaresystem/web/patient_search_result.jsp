@@ -30,53 +30,57 @@
         <jsp:useBean id="user" class="ece356.User" scope="session"/>
         <div class="bs-example">
             <div class="page-header">
-                <h1>Health Care System<small><small> An ECE356 Database Design Project</small></small></h1>
+                <h1>Health Care System<small> An ECE356 Database Design Project</small></h1>
             </div>
             <h3>Patient Search Results</h3>
             <br>
-            <table class="table table-hover">
-                <tr>
-                    <th>Alias</th>
-                    <th>Province</th>
-                    <th>City</th>
-                    <th>Friend status</th>
-                </tr>
-                <% for(Integer i = 0; i < patientSearchResults.size(); ++i) {
-                    PatientSearch ps = (PatientSearch)patientSearchResults.get(i);
-                    String frStatus = "";
-                    if(ps.getAccepted()) {
-                        frStatus = "added";
-                    } else if(ps.getFriendAlias() == null) {
-                        frStatus = "add";
-                    } else if(ps.getFriendAlias().equals(user.getUserAlias())) {
-                        frStatus = "confirm";
-                    } else if(ps.getFriendAlias().equals(ps.getPatientAlias())) {
-                        frStatus = "pending";
-                    }
-                %>
+            <% if(patientSearchResults.size() > 0) { %>
+                <table class="table table-hover">
                     <tr>
-                        <td><%= ps.getPatientAlias() %></td>
-                        <td><%= ps.getProvince() %></td>
-                        <td><%= ps.getCity() %></td>
-                        <td>
-                            <% if(frStatus.equals("confirm")) { %>
-                                <a href="ConfirmFriendServlet?id=1&index=<%= i %>&friend_alias=<%= ps.getPatientAlias() %>">
-                                    <%= frStatus %>
-                                </a>
-                            <% } else if(frStatus.equals("add")) { %>
-                                <a href="AddFriendRequestServlet?index=<%= i %>&friend_alias=<%= ps.getPatientAlias() %>">
-                                <%= frStatus %>
-                                </a>
-                            <% } else { %>
-                                <%= frStatus %>
-                            <% } %>
-                        </td>
+                        <th>Alias</th>
+                        <th>Province</th>
+                        <th>City</th>
+                        <th>Friend status</th>
                     </tr>
-                <% } %>
-            </table>
-        <a href="PatientSearchFormServlet" class="btn btn-primary" role="button">Search again</a><br>
-        <br><br>
-        <a href="PatientProfileServlet" class="btn btn-success" role="button">My Profile</a>
+                    <% for(Integer i = 0; i < patientSearchResults.size(); ++i) {
+                        PatientSearch ps = (PatientSearch)patientSearchResults.get(i);
+                        String frStatus = "";
+                        if(ps.getAccepted()) {
+                            frStatus = "added";
+                        } else if(ps.getFriendAlias() == null) {
+                            frStatus = "add";
+                        } else if(ps.getFriendAlias().equals(user.getUserAlias())) {
+                            frStatus = "confirm";
+                        } else if(ps.getFriendAlias().equals(ps.getPatientAlias())) {
+                            frStatus = "pending";
+                        }
+                    %>
+                        <tr>
+                            <td><%= ps.getPatientAlias() %></td>
+                            <td><%= ps.getProvince() %></td>
+                            <td><%= ps.getCity() %></td>
+                            <td>
+                                <% if(frStatus.equals("confirm")) { %>
+                                    <a href="ConfirmFriendServlet?id=1&index=<%= i %>&friend_alias=<%= ps.getPatientAlias() %>">
+                                        <%= frStatus %>
+                                    </a>
+                                <% } else if(frStatus.equals("add")) { %>
+                                    <a href="AddFriendRequestServlet?index=<%= i %>&friend_alias=<%= ps.getPatientAlias() %>">
+                                    <%= frStatus %>
+                                    </a>
+                                <% } else { %>
+                                    <%= frStatus %>
+                                <% } %>
+                            </td>
+                        </tr>
+                    <% } %>
+                </table>
+            <% } else { %>
+                <div class="alert alert-warning"><strong>Uh oh!</strong> Your search returned no results</div>
+            <% } %>
+            <a href="PatientSearchFormServlet" class="btn btn-primary" role="button">Search again</a><br>
+            <br><br>
+            <a href="PatientProfileServlet" class="btn btn-success" role="button">My Profile</a>
         </div>
     </body>
 </html>

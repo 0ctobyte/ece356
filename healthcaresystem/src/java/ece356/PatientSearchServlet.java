@@ -33,7 +33,7 @@ public class PatientSearchServlet extends HttpServlet {
         User user = (User)request.getSession().getAttribute("user");
         String patient_alias = request.getParameter("patient_search_alias");
         String city = request.getParameter("patient_search_city");
-        String province = request.getParameter("patient_search_province");
+        String province = (request.getParameter("patient_search_province") == null) ? "" : request.getParameter("patient_search_province");
         String update = request.getParameter("update");
         try {
             if(user == null) throw new RuntimeException("Not logged in");
@@ -49,7 +49,9 @@ public class PatientSearchServlet extends HttpServlet {
             }
         } catch(Exception e) {
             System.err.println(e.getMessage());
-            if(e.getMessage().equals("Unauthorized Access")) {
+            if(e.getMessage() == null) {
+                url = "/invalid_access.jsp";
+            } else if(e.getMessage().equals("Unauthorized Access")) {
                 url = "/unauthorized.jsp";
             } else if(e.getMessage().equals("Not logged in")) {
                 url = "/LoginServlet";

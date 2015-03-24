@@ -39,7 +39,9 @@ public class PatientSearchFormServlet extends HttpServlet {
             url = "/patient_search_form.jsp";
         } catch(Exception e) {
             System.err.println(e.getMessage());
-            if(e.getMessage().equals("Unauthorized Access")) {
+            if(e.getMessage() == null) {
+                url = "/invalid_access.jsp";
+            } else if(e.getMessage().equals("Unauthorized Access")) {
                 url = "/unauthorized.jsp";
             } else if(e.getMessage().equals("Not logged in")) {
                 url = "/LoginServlet";

@@ -42,44 +42,63 @@
             <h3><%= doctorProfile.getFirstName() + " " + doctorProfile.getLastName() %> <small><%= doctorProfile.getDoctorAlias() %></small></h3>
             <br>
             <% if(user.getAccountType() == User.AccountType.Doctor) { %>
-            <p><b>Email:</b>    <%= doctorProfile.getEmail() %></p>
+            <p><b>Email:</b> <%= doctorProfile.getEmail() %></p>
             <% }%>
-            <p><b>Gender:</b>   <%= doctorProfile.getGender()%><p>
-            <p><b>Years Licensed:</b>    <%= doctorProfile.getNumYearsLicensed() %><p>
-            <p><b>Average Rating:</b>    <%= doctorProfile.getAvgRating()%><p>
-            <p><b>Number of Reviews:</b>   <%= doctorProfile.getNumReviews()%><p>
+            <table class="table table-hover">
+                <tr>
+                    <th>Gender</th>
+                    <th>Years licensed</th>
+                    <th>Average rating</th>
+                    <th>Number of reviews</th>
+                </tr>
+                <tr>
+                    <td><%= doctorProfile.getGender()%></td>
+                    <td><%= doctorProfile.getNumYearsLicensed() %></td>
+                    <td><%= doctorProfile.getAvgRating()%></td>
+                    <td><%= doctorProfile.getNumReviews()%></td>
+                </tr>
+            </table>
             <p><b>Specializations:</b></p>
-            <ul>
+            <ul class="list-inline">
             <% for(Object o: specializations) {
                 Specialization s = (Specialization)o;
             %>
                 <li><%= s.getSpecializationName() %></li>
             <% } %>
-            </ul>
+            </ul><br>
             <p><b>Work Addresses:</b></p>
-            <% for (Object o : workAddresses) {
-                    WorkAddress w = (WorkAddress) o;
-            %>
-                <% if (w.getUnitNumber() != 0) {%>
-                    Unit <%= w.getUnitNumber()%><br>
-                <% }%>
-                <%= w.getStreetNumber()%> <%= w.getStreetName()%><br>
-                <%= w.getCity()%>, <%= w.getProvince()%><br>
-                <%= w.getPostalCode()%><br>
-                <br>
-            <% } %>
+            <table class="table table-hover">
+                <tr>
+                    <th>Street #</th>
+                    <th>Street name</th>
+                    <th>City</th>
+                    <th>Province</th>
+                    <th>Postal code</th>
+                </tr>
+                <% for (Object o : workAddresses) {
+                        WorkAddress w = (WorkAddress) o;
+                %>
+                    <tr>
+                        <td><%= w.getStreetNumber()%></td>
+                        <td><%= w.getStreetName()%></td>
+                        <td><%= w.getCity()%></td>
+                        <td><%= w.getProvince()%></td>
+                        <td><%= w.getPostalCode()%></td>
+                    </tr>
+                <% } %>
+            </table>
             <p><b>Review IDs:</b></p>
-            <ul>
+            <ul class="list-inline">
                 <% for (Object o : reviewIDs) {%>
                     <li><a href="ReviewDetailServlet?rid=<%= (Integer) o%>"><%= (Integer) o%></a></li>
                 <% } %>
-            </ul>
-            
+            </ul><br>
             <% if (user.getAccountType() == user.getAccountType().Patient) {%>
-                <a href="WriteReviewFormServlet?doctor_alias=<%= doctorProfile.getDoctorAlias()%>">Write a review</a><br>
-                <a href="PatientProfileServlet">Profile</a>
+                <ul class="list-inline">
+                    <li><a href="WriteReviewFormServlet?doctor_alias=<%= doctorProfile.getDoctorAlias()%>">Write a review</a></li>
+                    <li><a href="PatientProfileServlet">Profile</a></li>
+                </ul><br>
             <% }%>
-            <br><br>
             <a href="LogoutServlet" class="btn btn-danger" role="button">Logout</a>
         </div>
     </body>

@@ -42,7 +42,9 @@ public class ReviewDetailServlet extends HttpServlet {
             url = "/review_detail.jsp";
         } catch(Exception e) {
             System.err.println(e.getMessage());
-            if(e.getMessage().equals("Not logged in")) {
+            if(e.getMessage() == null) {
+                url = "/invalid_access.jsp";
+            } else if(e.getMessage().equals("Not logged in")) {
                 url = "/LoginServlet";
             }
         }

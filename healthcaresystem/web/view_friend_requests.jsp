@@ -35,21 +35,25 @@
             <% String nofr_msg = (String) request.getAttribute("nofr_msg"); %>
             <h3>Friend Requests</h3>
             <br>
-            <% for (Object o : friendRequests) {
-                    FriendRequest fr = (FriendRequest) o;
-            %>
-            <%= fr.getPatientAlias()%> <%= fr.getEmail()%> 
-            <a href="ConfirmFriendServlet?id=0&friend_alias=<%=fr.getPatientAlias()%>">
-                Confirm
-            </a><br>
-            <% } %>
-            <br>
+            <table class="table table-hover">
+                <% for (Object o : friendRequests) {
+                        FriendRequest fr = (FriendRequest) o;
+                %>
+                <tr>
+                    <td><%= fr.getPatientAlias() %></td>
+                    <td><%= fr.getEmail() %></td>
+                    <td><a href="ConfirmFriendServlet?id=0&friend_alias=<%=fr.getPatientAlias()%>">
+                        Confirm
+                    </a></td>
+                </tr>
+                <% } %>
+            </table>
             <% if (confirm_msg != null) {%>
-            <%= confirm_msg%><br>
+                <div class="alert alert-success"><strong>Success!</strong> <%= confirm_msg %></div>
             <% } else if (nofr_msg != null) {%>
-            <%= nofr_msg%><br>
+                <div class="alert alert-info"><%= nofr_msg %></div>
             <% }%>
-            <br><br>
+            <br>
             <a href="PatientProfileServlet" class="btn btn-success" role="button">My Profile</a>
         </div>
     </body>

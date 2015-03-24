@@ -45,12 +45,17 @@ public class DoctorSearchServlet extends HttpServlet {
         try {
             if(user == null) throw new RuntimeException("Not logged in");
             if(user.getAccountType() != User.AccountType.Patient) throw new RuntimeException("Unauthorized Access");
+            if(gender == null) gender = "";
+            if(specialization == null) specialization = "";
+            if(province == null) province = "";
             ArrayList<DoctorSearch> ds = (ArrayList<DoctorSearch>)DBAO.performDoctorSearch(user.getUserAlias(), fname, lname, gender, postal_code, city, province, specialization, num_years_licensed, avg_rating, reviewed_by_friend, keyword);
             request.setAttribute("doctorSearchResults", ds);
             url = "/doctor_search_result.jsp";
         } catch(Exception e) {
             System.err.println(e.getMessage());
-            if(e.getMessage().equals("Unauthorized Access")) {
+            if(e.getMessage() == null) {
+                url = "/invalid_access.jsp";
+            } else if(e.getMessage().equals("Unauthorized Access")) {
                 url = "/unauthorized.jsp";
             } else if(e.getMessage().equals("Not logged in")) {
                 url = "/LoginServlet";
