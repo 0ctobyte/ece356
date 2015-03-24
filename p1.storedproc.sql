@@ -1,5 +1,5 @@
 SET storage_engine=InnoDB;
-use ece356db_rsawhney;
+use ece356db_s4bhatta;
 
 
 DROP PROCEDURE IF EXISTS Test_ResetDB;
@@ -49,7 +49,7 @@ create view PatientNumReviewView as select count(review_id) as num_reviews, pati
 drop view if exists PatientLastReviewView;
 create view PatientLastReviewView as select MAX(date) as last_review, patient_alias from Review group by patient_alias;
 drop view if exists PatientSearchView;
-create view PatientSearchView as select u.patient_alias, c.city, p.province, p.province_name, IFNULL(nr.num_reviews,0) as num_reviews, lr.last_review, fr.patient_alias as requestor_alias, fr.friend_alias as requestee_alias, fr.accepted from Patient as u natural join City as c natural join Province as p left join FriendRequest as fr on fr.patient_alias=u.patient_alias or fr.friend_alias=u.patient_alias left join PatientLastReviewView as lr on lr.patient_alias=u.patient_alias left join PatientNumReviewView as nr on nr.patient_alias=u.patient_alias;
+create view PatientSearchView as select u.patient_alias, c.city, p.province, p.province_name, IFNULL(nr.num_reviews,0) as num_reviews, lr.last_review from Patient as u natural join City as c natural join Province as p left join PatientLastReviewView as lr on lr.patient_alias=u.patient_alias left join PatientNumReviewView as nr on nr.patient_alias=u.patient_alias;
 
 /* Create the Users */
 insert into User values ('doc_aiken', 'aiken@head.com', '$2a$10$Ngcjlfgfy1bFUUaZ/bAwSO.b69wJ6rcxveuOsuQL/ERGDdLq1yC2K', 'John', null, 'Aikenhead', 'Doctor');

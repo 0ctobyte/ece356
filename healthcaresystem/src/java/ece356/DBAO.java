@@ -20,7 +20,7 @@ import org.mindrot.jbcrypt.BCrypt;
 public class DBAO {
     public static final String host = "eceweb.uwaterloo.ca";
     public static final String url = "jdbc:mysql://" + host + ":3306/";
-    public static final String nid = "rsawhney";
+    public static final String nid = "s4bhatta";
     public static final String user = "user_" + nid;
     public static final String pwd = "user_" + nid;
     
@@ -394,32 +394,32 @@ public class DBAO {
             con = getConnection();
             
             // Construct a filtered string for the DB search.
+            filteredString += " AND pv.patient_alias != ?";
             if (!patient_alias.isEmpty())
             {
-                filteredString += " AND patient_alias LIKE ?";
+                filteredString += " AND pv.patient_alias LIKE ?";
             }
             
             if (!province.isEmpty()) {
-                filteredString += " AND province LIKE ?";
+                filteredString += " AND pv.province LIKE ?";
             }
             
             if (!city.isEmpty()) {
-                filteredString += " AND city LIKE ?";
+                filteredString += " AND pv.city LIKE ?";
             }
             
-            String patientSearchQuery = "SELECT pcr.*, fr.friend_alias, fr.accepted"
-                    + " FROM (SELECT pc.*, COUNT(DISTINCT review_id) AS num_reviews,"
-                    + " max(r.date) as last_review FROM (SELECT p.patient_alias,"
-                    + " c.city, c.province FROM Patient AS p NATURAL JOIN City as c"
-                    + " WHERE TRUE" + filteredString + ") AS pc"
-                    + " LEFT JOIN Review AS r ON r.patient_alias = pc.patient_alias"
-                    + " GROUP BY patient_alias) AS pcr LEFT JOIN FriendRequest AS fr"
-                    + " ON (fr.patient_alias = ? AND fr.friend_alias = pcr.patient_alias)"
-                    + " OR (fr.patient_alias = pcr.patient_alias AND fr.friend_alias = ?)";
+            String patientSearchQuery = "SELECT pv.*, fr.patient_alias as requestor_alias, fr.friend_alias as requestee_alias, fr.accepted"
+                    + " FROM PatientSearchView AS pv LEFT JOIN FriendRequest AS fr ON"
+                    + " ((fr.patient_alias=? AND fr.friend_alias=pv.patient_alias) "
+                    + " OR (fr.patient_alias=pv.patient_alias AND fr.friend_alias=?))"
+                    + " WHERE TRUE" + filteredString;
             
             pstmt = con.prepareStatement(patientSearchQuery);
 
             int num = 0;
+            pstmt.setString(++num, user_alias);
+            pstmt.setString(++num, user_alias);
+            pstmt.setString(++num, user_alias);
             if (!patient_alias.isEmpty()) {
                 pstmt.setString(++num, "%"+patient_alias+"%");
             }
@@ -430,9 +430,6 @@ public class DBAO {
                 pstmt.setString(++num, "%"+city+"%");
             }
             
-            pstmt.setString(++num, user_alias);
-            pstmt.setString(++num, user_alias);
-            
             ResultSet resultSet;
             resultSet = pstmt.executeQuery();
 
@@ -442,15 +439,14 @@ public class DBAO {
 
             resultSet.beforeFirst();
             while (resultSet.next()) {
-                if(resultSet.getString("pcr.patient_alias").equals(user_alias)) continue;
                 PatientSearch ps = new PatientSearch(
-                        resultSet.getString("pcr.patient_alias"),
-                        resultSet.getString("pcr.city"),
-                        resultSet.getString("pcr.province"),
-                        resultSet.getInt("pcr.num_reviews"),
-                        resultSet.getString("pcr.last_review"),
-                        resultSet.getString("fr.friend_alias"),
-                        resultSet.getBoolean("fr.accepted")
+                        resultSet.getString("pv.patient_alias"),
+                        resultSet.getString("pv.city"),
+                        resultSet.getString("pv.province"),
+                        resultSet.getInt("pv.num_reviews"),
+                        resultSet.getString("pv.last_review"),
+                        resultSet.getString("requestee_alias"),
+                        resultSet.getBoolean("accepted")
                 );
                 r.add(ps);
             }

@@ -79,7 +79,7 @@ drop view if exists PatientLastReviewView;
 create view PatientLastReviewView as select MAX(date) as last_review, patient_alias from Review group by patient_alias;
 
 drop view if exists PatientSearchView;
-create view PatientSearchView as select u.patient_alias, c.city, p.province, p.province_name, IFNULL(nr.num_reviews,0) as num_reviews, lr.last_review, fr.patient_alias as requestor_alias, fr.friend_alias as requestee_alias, fr.accepted from Patient as u natural join City as c natural join Province as p left join FriendRequest as fr on fr.patient_alias=u.patient_alias or fr.friend_alias=u.patient_alias left join PatientLastReviewView as lr on lr.patient_alias=u.patient_alias left join PatientNumReviewView as nr on nr.patient_alias=u.patient_alias;
+create view PatientSearchView as select u.patient_alias, c.city, p.province, p.province_name, IFNULL(nr.num_reviews,0) as num_reviews, lr.last_review from Patient as u natural join City as c natural join Province as p left join PatientLastReviewView as lr on lr.patient_alias=u.patient_alias left join PatientNumReviewView as nr on nr.patient_alias=u.patient_alias;
 
 /* data operations */
 
@@ -90,7 +90,7 @@ create view PatientSearchView as select u.patient_alias, c.city, p.province, p.p
 		accepted == 0 && friend_alias == B => Patient A must wait for Patient B to accept friend request 
 		accepted == NULL => Neither patient A nor  patiend B have added each other
 */
-select * from PatientSearchView where patient_alias='<patient_alias>' and city='<city>' and province='<province>';
+select pv.*, fr.patient_alias as requestor_alias, fr.friend_alias as requestee_alias, fr.accepted from (select * from PatientSearchView) as pv left join FriendRequest as fr on ((fr.patient_alias='<current_user_alias>' and fr.friend_alias=pv.patient_alias) or (fr.patient_alias=pv.patient_alias and fr.friend_alias='<current_user_alias>')) where pv.patient_alias!='<current_user_alias>' and pv.city='<city>' and pv.province='<province>' and pv.patient_alias LIKE '%<patient_alias>%';
 
 /* O2. Patient add friend */
 select friend_alias, accepted from FriendRequest where patient_alias='<current_user_alias>';
