@@ -29,7 +29,7 @@
         <jsp:useBean id="user" class="ece356.User" scope="session"/>
         <div class="bs-example">
             <div class="page-header">
-                <h1>Health Care System<small><small> An ECE356 Database Design Project</small></small></h1>
+                <h1>Health Care System <small><small>An ECE356 Database Design Project</small></small></h1>
             </div>
             <% String confirm_msg = (String) request.getAttribute("confirm_msg"); %>
             <% String nofr_msg = (String) request.getAttribute("nofr_msg"); %>

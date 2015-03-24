@@ -36,7 +36,7 @@
         <jsp:useBean id="user" class="ece356.User" scope="session"/>
         <div class="bs-example">
             <div class="page-header">
-                <h1>Health Care System<small><small> An ECE356 Database Design Project</small></small></h1>
+                <h1>Health Care System <small><small>An ECE356 Database Design Project</small></small></h1>
             </div>
             
             <h3><%= doctorProfile.getFirstName() + " " + doctorProfile.getLastName() %> <small><%= doctorProfile.getDoctorAlias() %></small></h3>
