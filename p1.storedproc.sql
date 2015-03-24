@@ -112,7 +112,7 @@ DECLARE inGender CHAR DEFAULT 'F';
 IF gender='female' OR gender='Female' THEN SET inGender='F';
 ELSE SET inGender='M';
 END IF;
-SELECT COUNT(DISTINCT doctor_alias) INTO num_matches FROM (SELECT *, (YEAR(current_timestamp) - license_year) AS num_years_licensed FROM Doctor) AS d NATURAL JOIN Specialization AS s NATURAL JOIN WorkAddress NATURAL JOIN City AS c WHERE d.gender=inGender AND c.city=city AND s.specialization_name=specialization AND d.num_years_licensed=num_years_licensed;
+SELECT COUNT(DISTINCT t.doctor_alias) INTO num_matches FROM DoctorFlexSearchView AS t WHERE t.gender=inGender AND t.city=city AND t.specialization_name=specialization AND t.num_years_licensed=num_years_licensed;
 END;
 $
 DELIMITER ;
@@ -121,7 +121,7 @@ DROP PROCEDURE IF EXISTS Test_DoctorSearchStarRating;
 DELIMITER $
 CREATE PROCEDURE Test_DoctorSearchStarRating(IN avg_star_rating FLOAT, OUT num_matches INT)
 BEGIN
-SELECT COUNT(*) INTO num_matches FROM (SELECT AVG(star_rating) FROM Review GROUP BY doctor_alias HAVING AVG(star_rating)>=avg_star_rating) AS t;
+SELECT COUNT(DISTINCT *) INTO num_matches FROM DoctorFlexSearchView AS t WHERE t.avg_rating>=avg_star_rating;
 END;
 $
 DELIMITER ;
@@ -130,7 +130,7 @@ DROP PROCEDURE IF EXISTS Test_DoctorSearchFriendReview;
 DELIMITER $
 CREATE PROCEDURE Test_DoctorSearchFriendReview(IN patient_alias VARCHAR(20), IN review_keyword VARCHAR(20), OUT num_matches INT)
 BEGIN
-SELECT COUNT(DISTINCT u.doctor_alias) INTO num_matches FROM (SELECT r.patient_alias, r.comments, r.doctor_alias FROM (SELECT * FROM FriendRequest AS fr WHERE accepted=1 AND (fr.patient_alias=patient_alias OR fr.friend_alias=patient_alias)) AS z INNER JOIN Review AS r ON z.patient_alias=r.patient_alias OR z.friend_alias=r.patient_alias WHERE r.patient_alias!=patient_alias) AS t INNER JOIN (SELECT * FROM Review WHERE comments LIKE CONCAT('%',review_keyword,'%')) AS u ON t.doctor_alias=u.doctor_alias;
+SELECT COUNT(DISTINCT t.doctor_alias) INTO num_matches FROM DoctorFlexSearchView AS t WHERE ((t.patient_alias=patient_alias OR t.friend_alias=patient_alias) AND t.reviewer_alias!=patient_alias) AND t.comments LIKE CONCAT('%',review_keyword,'%');
 END;
 $
 DELIMITER ;
