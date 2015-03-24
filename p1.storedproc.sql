@@ -44,6 +44,8 @@ drop view if exists DoctorNumReviewView;
 create view DoctorNumReviewView as select doctor_alias, count(review_id) as num_reviews from Review group by doctor_alias;
 drop view if exists DoctorFlexSearchView;
 create view DoctorFlexSearchView as select d.doctor_alias, u.name_first, u.name_middle, u.name_last, d.gender, w.postal_code, c.city, p.province, s.specialization_name, (YEAR(current_timestamp)-d.license_year) as num_years_licensed, IFNULL(ar.avg_rating, 0) as avg_rating, IFNULL(nr.num_reviews, 0) as num_reviews, r.comments, r.patient_alias as reviewer_alias, fr.accepted, fr.patient_alias, fr.friend_alias from Doctor as d inner join User as u on u.user_alias=d.doctor_alias natural join WorkAddress as w natural join City as c natural join Province as p natural join Specialization as s left join DoctorNumReviewView as nr on nr.doctor_alias=d.doctor_alias left join DoctorAvgRatingView as ar on ar.doctor_alias=d.doctor_alias left join Review as r on r.doctor_alias=d.doctor_alias left join FriendRequest as fr on ((fr.patient_alias=r.patient_alias or fr.friend_alias=r.patient_alias) and fr.accepted=1);
+drop view if exists PatientSearchView;
+create view PatientSearchView as select u.patient_alias, c.city, p.province, p.province_name, fr.patient_alias as requestor_alias, fr.friend_alias as requestee_alias, fr.accepted from Patient as u natural join City as c natural join Province as p left join FriendRequest as fr on fr.patient_alias=u.patient_alias or fr.friend_alias=u.patient_alias;
 
 /* Create the Users */
 insert into User values ('doc_aiken', 'aiken@head.com', '$2a$10$Ngcjlfgfy1bFUUaZ/bAwSO.b69wJ6rcxveuOsuQL/ERGDdLq1yC2K', 'John', null, 'Aikenhead', 'Doctor');
@@ -99,7 +101,7 @@ DROP PROCEDURE IF EXISTS Test_PatientSearch;
 DELIMITER $
 CREATE PROCEDURE Test_PatientSearch(IN province VARCHAR(20), IN city VARCHAR(20), OUT num_matches INT)
 BEGIN
-SELECT COUNT(*) INTO num_matches FROM Patient NATURAL JOIN City AS c NATURAL JOIN Province AS p WHERE c.city=city AND p.province_name=province;
+SELECT COUNT(DISTINCT p.patient_alias) INTO num_matches FROM PatientSearchView as p WHERE p.city=city AND p.province_name=province;
 END;
 $
 DELIMITER ;
@@ -121,7 +123,7 @@ DROP PROCEDURE IF EXISTS Test_DoctorSearchStarRating;
 DELIMITER $
 CREATE PROCEDURE Test_DoctorSearchStarRating(IN avg_star_rating FLOAT, OUT num_matches INT)
 BEGIN
-SELECT COUNT(DISTINCT *) INTO num_matches FROM DoctorFlexSearchView AS t WHERE t.avg_rating>=avg_star_rating;
+SELECT COUNT(DISTINCT t.doctor_alias) INTO num_matches FROM DoctorFlexSearchView AS t WHERE t.avg_rating>=avg_star_rating;
 END;
 $
 DELIMITER ;
