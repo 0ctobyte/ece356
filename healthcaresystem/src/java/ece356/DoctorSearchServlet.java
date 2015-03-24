@@ -32,12 +32,9 @@ public class DoctorSearchServlet extends HttpServlet {
         String url = "/invalid_access.jsp";
         User user = (User)request.getSession().getAttribute("user");
         String fname = request.getParameter("doctor_search_fname");
-        String mname = request.getParameter("doctor_search_mname");
         String lname = request.getParameter("doctor_search_lname");
         String gender = request.getParameter("doctor_search_gender");
         Integer num_years_licensed = (request.getParameter("doctor_search_#yearslicensed").isEmpty()) ? Integer.MIN_VALUE : Integer.parseInt(request.getParameter("doctor_search_#yearslicensed"));
-        Integer street_num = (request.getParameter("doctor_search_street#").isEmpty()) ? Integer.MIN_VALUE : Integer.parseInt(request.getParameter("doctor_search_street#"));
-        String street_name = request.getParameter("doctor_search_streetname");
         String postal_code = request.getParameter("doctor_search_postal");
         String city = request.getParameter("doctor_search_city");
         String province = request.getParameter("doctor_search_province");
@@ -48,7 +45,7 @@ public class DoctorSearchServlet extends HttpServlet {
         try {
             if(user == null) throw new RuntimeException("Not logged in");
             if(user.getAccountType() != User.AccountType.Patient) throw new RuntimeException("Unauthorized Access");
-            ArrayList<DoctorSearch> ds = (ArrayList<DoctorSearch>)DBAO.performDoctorSearch(user.getUserAlias(), fname, mname, lname, gender, num_years_licensed, street_num, street_name, postal_code, city, province, specialization, avg_rating, reviewed_by_friend, keyword);
+            ArrayList<DoctorSearch> ds = (ArrayList<DoctorSearch>)DBAO.performDoctorSearch(user.getUserAlias(), fname, lname, gender, postal_code, city, province, specialization, num_years_licensed, avg_rating, reviewed_by_friend, keyword);
             request.setAttribute("doctorSearchResults", ds);
             url = "/doctor_search_result.jsp";
         } catch(Exception e) {

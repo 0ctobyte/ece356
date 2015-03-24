@@ -42,3 +42,6 @@ create view DoctorOwnProfileView as select d.doctor_alias, u.email, u.name_first
 
 drop view if exists PatientOwnProfileView;
 create view PatientOwnProfileView as select p.patient_alias, u.email, u.name_first, u.name_middle, u.name_last, c.city, c.province from (User as u inner join Patient as p on u.user_alias=p.patient_alias) natural join City as c;
+
+drop view if exists DoctorFlexSearchView;
+create view DoctorFlexSearchView as select u.name_first, u.name_last, d.gender, c.city, p.province, s.specialization_name, (YEAR(current_timestamp)-d.license_year) as num_years_licensed, r.avg_rating, t.comments, t.patient_alias, fr.accepted, fr.patient_alias, fr.friend_alias from Doctor as d inner join User as u on u.user_alias=d.doctor_alias natural join WorkAddress as w natural join City as c natural join Province as p natural join Specialization as s left join (select doctor_alias, AVG(star_rating) as avg_rating from Review group by doctor_alias) as r on r.doctor_alias=d.doctor_alias left join Review as t on t.doctor_alias=d.doctor_alias left join FriendRequest as fr on ((fr.patient_alias=t.patient_alias or fr.friend_alias=t.patient_alias) and fr.accepted=1);

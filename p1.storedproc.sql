@@ -38,6 +38,12 @@ drop view if exists DoctorOwnProfileView;
 create view DoctorOwnProfileView as select d.doctor_alias, u.email, u.name_first, u.name_middle, u.name_last, d.gender, (year(current_timestamp)-d.license_year) as num_years_licensed, avg(r.star_rating) as avg_rating, count(distinct r.review_id) as num_reviews from (User as u inner join Doctor as d on u.user_alias=d.doctor_alias) left join Review as r on d.doctor_alias=r.doctor_alias group by d.doctor_alias;
 drop view if exists PatientOwnProfileView;
 create view PatientOwnProfileView as select p.patient_alias, u.email, u.name_first, u.name_middle, u.name_last, c.city, c.province from (User as u inner join Patient as p on u.user_alias=p.patient_alias) natural join City as c;
+drop view if exists DoctorAvgRatingView;
+create view DoctorAvgRatingView as select doctor_alias, AVG(star_rating) as avg_rating from Review group by doctor_alias;
+drop view if exists DoctorNumReviewView;
+create view DoctorNumReviewView as select doctor_alias, count(review_id) as num_reviews from Review group by doctor_alias;
+drop view if exists DoctorFlexSearchView;
+create view DoctorFlexSearchView as select d.doctor_alias, u.name_first, u.name_middle, u.name_last, d.gender, w.postal_code, c.city, p.province, s.specialization_name, (YEAR(current_timestamp)-d.license_year) as num_years_licensed, IFNULL(ar.avg_rating, 0) as avg_rating, IFNULL(nr.num_reviews, 0) as num_reviews, r.comments, r.patient_alias as reviewer_alias, fr.accepted, fr.patient_alias, fr.friend_alias from Doctor as d inner join User as u on u.user_alias=d.doctor_alias natural join WorkAddress as w natural join City as c natural join Province as p natural join Specialization as s left join DoctorNumReviewView as nr on nr.doctor_alias=d.doctor_alias left join DoctorAvgRatingView as ar on ar.doctor_alias=d.doctor_alias left join Review as r on r.doctor_alias=d.doctor_alias left join FriendRequest as fr on ((fr.patient_alias=r.patient_alias or fr.friend_alias=r.patient_alias) and fr.accepted=1);
 
 /* Create the Users */
 insert into User values ('doc_aiken', 'aiken@head.com', '$2a$10$Ngcjlfgfy1bFUUaZ/bAwSO.b69wJ6rcxveuOsuQL/ERGDdLq1yC2K', 'John', null, 'Aikenhead', 'Doctor');
