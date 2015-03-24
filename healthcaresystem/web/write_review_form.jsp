@@ -10,25 +10,43 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>HealthCareSystem | Write Review</title>
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
+        <style type="text/css">
+            .bs-example{
+                margin: 20px;
+            }
+        </style>
     </head>
     <body>
         <jsp:useBean id="review_doctor_alias" class="String" scope="session"/>
         <% String wreview_msg = (String)request.getAttribute("wreview_msg"); %>
-        <h1>Write Review</h1>
-        <%= review_doctor_alias %><br>
-        <form name="add_review_form" action="AddReviewServlet" method="POST">
-            rating: <select name="add_review_rating">
-                <% for(Double i = 0.0; i <= 5.0; i += 0.5) { %>
-                    <option><%= i %></option>
-                <% } %>
-            </select><br>
-            comments: <br>
-            <textarea name="add_review_comments" rows="4" cols="20"></textarea><br>
-            <input type="submit" value="Sumbit Review" name="add_review_submit" />
-        </form>
-        <% if(wreview_msg != null) { %>
-            <%= wreview_msg %><br>
-        <% } %>
-        <a href="PatientProfileServlet">Profile</a>
+        <div class="bs-example">
+            <div class="page-header">
+                <h1>Health Care System <small><small>An ECE356 Database Design Project</small></small></h1>
+            </div>
+            <h3>Write Review</h3>
+            <br>
+            <%= review_doctor_alias %><br>
+            <form name="add_review_form" action="AddReviewServlet" method="POST">
+                rating: <select name="add_review_rating">
+                    <% for(Double i = 0.0; i <= 5.0; i += 0.5) { %>
+                        <option><%= i %></option>
+                    <% } %>
+                </select><br>
+                comments: <br>
+                <textarea name="add_review_comments" rows="4" cols="20"></textarea><br>
+                <input type="submit" value="Sumbit Review" name="add_review_submit" />
+            </form>
+            <% if(wreview_msg != null) { %>
+                <%= wreview_msg %><br>
+            <% } %>
+            <a href="PatientProfileServlet">Profile</a>
+        </div>
     </body>
 </html>

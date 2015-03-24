@@ -27,7 +27,7 @@
         <jsp:useBean id="patientProfile" class="ece356.PatientProfile" scope="request"/>
         <div class="bs-example">
             <div class="page-header">
-                <h1>Health Care System<small><small> An ECE356 Database Design Project</small></small></h1>
+                <h1>Health Care System <small><small>An ECE356 Database Design Project</small></small></h1>
             </div>
             <h3><%= patientProfile.getFirstName() + " " + patientProfile.getLastName()%> <small><%= patientProfile.getPatientAlias() %></small></h3>
             <br>
