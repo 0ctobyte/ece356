@@ -1,5 +1,5 @@
 SET storage_engine=InnoDB;
-use ece356db_s4bhatta;
+use ece356db_rsawhney;
 
 
 DROP PROCEDURE IF EXISTS Test_ResetDB;
@@ -174,3 +174,5 @@ SELECT AVG(star_rating), COUNT(DISTINCT review_id) INTO avg_star, num_reviews FR
 END;
 $
 DELIMITER ;
+
+CALL Test_ResetDB();
