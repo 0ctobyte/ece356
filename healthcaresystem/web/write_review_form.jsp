@@ -30,23 +30,30 @@
             <div class="page-header">
                 <h1>Health Care System <small><small>An ECE356 Database Design Project</small></small></h1>
             </div>
-            <h3>Write Review</h3>
+            <h3>Write Review <small><%= review_doctor_alias %></small></h3>
             <br>
-            <%= review_doctor_alias %><br>
             <form name="add_review_form" action="AddReviewServlet" method="POST">
-                rating: <select name="add_review_rating">
-                    <% for(Double i = 0.0; i <= 5.0; i += 0.5) { %>
-                        <option><%= i %></option>
-                    <% } %>
-                </select><br>
-                comments: <br>
-                <textarea name="add_review_comments" rows="4" cols="20"></textarea><br>
-                <input type="submit" value="Sumbit Review" name="add_review_submit" />
+                <div class="form-group">
+                    <label>Give a rating:</label>
+                    <select class="form-control input-sm" name="add_review_rating">
+                        <% for(Double i = 0.0; i <= 5.0; i += 0.5) { %>
+                            <option><%= i %></option>
+                        <% } %>
+                    </select>
+                </div>
+                    
+                <div class="form-group">
+                    <textarea class="form-control input-sm" name="add_review_comments" rows="3" placeholder="Write a comment..." ></textarea>
+                </div>
+                <div>
+                    <input class="btn btn-primary bt-xs" type="submit" value="Sumbit Review" name="add_review_submit" />
+                </div>
             </form>
             <% if(wreview_msg != null) { %>
-                <%= wreview_msg %><br>
+                <br><div class="alert alert-danger"><strong>Error!</strong> <%= wreview_msg %></div>
             <% } %>
-            <a href="PatientProfileServlet">Profile</a>
+            <br><br>
+            <a href="PatientProfileServlet" class="btn btn-success" role="button" >My Profile</a>
         </div>
     </body>
 </html>
