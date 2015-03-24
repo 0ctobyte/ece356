@@ -12,7 +12,21 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>HealthCareSystem | Profile</title>
+        <title>HealthCareSystem | Doctor Profile</title>
+        
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
+        <style type="text/css">
+            .bs-example{
+                margin: 20px;
+            }
+        </style>
+        
     </head>
     <body>
         <jsp:useBean id="doctorProfile" class="ece356.DoctorProfile" scope="request"/>
@@ -20,47 +34,54 @@
         <jsp:useBean id="workAddresses" class="java.util.ArrayList" scope="request"/>
         <jsp:useBean id="reviewIDs" class="java.util.ArrayList" scope="request"/>
         <jsp:useBean id="user" class="ece356.User" scope="session"/>
-        <h1>Profile</h1>
-        <%= doctorProfile.getDoctorAlias() %><br>
-        Name: <%= doctorProfile.getFirstName() + " " + doctorProfile.getLastName() %><br>
-        <% if(user.getAccountType() == User.AccountType.Doctor) { %>
-            Email: <%= doctorProfile.getEmail() %><br>
-        <% } %>
-        Gender: <%= doctorProfile.getGender() %><br>
-        Years Licensed: <%= doctorProfile.getNumYearsLicensed() %><br>
-        Average Rating: <%= doctorProfile.getAvgRating() %><br>
-        Number of Reviews: <%= doctorProfile.getNumReviews() %><br><br>
-        
-        Specializations:<br>
-        <ul>
-        <% for(Object o: specializations) {
-            Specialization s = (Specialization)o;
-        %>
-            <li><%= s.getSpecializationName() %></li>
-        <% } %>
-        </ul><br>
-        
-        Work Addresses:<br>
-        <% for(Object o: workAddresses) { 
-            WorkAddress w = (WorkAddress)o;
-        %>
-            Unit <%= w.getUnitNumber() %><br>
-            <%= w.getStreetNumber() %> <%= w.getStreetName() %><br>
-            <%= w.getCity() %>, <%= w.getProvince() %><br>
-            <%= w.getPostalCode() %><br>
+        <div class="bs-example">
+            <div class="page-header">
+                <h1>Health Care System<small><small> An ECE356 Database Design Project</small></small></h1>
+            </div>
+            
+            <h3><%= doctorProfile.getFirstName() + " " + doctorProfile.getLastName() %> <small><%= doctorProfile.getDoctorAlias() %></small></h3>
+            
             <br>
-        <% } %>
-        
-        Review IDs:<br>
-        <ul>
-            <% for(Object o: reviewIDs) { %>
-                <li><a href="ReviewDetailServlet?rid=<%= (Integer)o %>"><%= (Integer)o %></a></li>
+            <% if(user.getAccountType() == User.AccountType.Doctor) { %>
+            <p><b>Email:</b>    <%= doctorProfile.getEmail() %></p>
+            <% }%>
+            <p><b>Gender:</b>   <%= doctorProfile.getGender()%><p>
+            <p><b>Years Licensed:</b>    <%= doctorProfile.getNumYearsLicensed() %><p>
+            <p><b>Average Rating:</b>    <%= doctorProfile.getAvgRating()%><p>
+            <p><b>Number of Reviews:</b>   <%= doctorProfile.getNumReviews()%><p>
+            <p><b>Specializations:</b></p>
+            <ul>
+            <% for(Object o: specializations) {
+                Specialization s = (Specialization)o;
+            %>
+                <li><%= s.getSpecializationName() %></li>
             <% } %>
-        </ul>
-        <% if(user.getAccountType() == user.getAccountType().Patient) { %>
-            <a href="WriteReviewFormServlet?doctor_alias=<%= doctorProfile.getDoctorAlias() %>">Write review</a><br>
-            <a href="PatientProfileServlet">Profile</a>
-        <% } %>
-        <a href="LogoutServlet">Logout</a>
+            </ul>
+            <p><b>Work Addresses:</b></p>
+            <% for (Object o : workAddresses) {
+                    WorkAddress w = (WorkAddress) o;
+            %>
+                <% if (w.getUnitNumber() != 0) {%>
+                    Unit <%= w.getUnitNumber()%><br>
+                <% }%>
+                <%= w.getStreetNumber()%> <%= w.getStreetName()%><br>
+                <%= w.getCity()%>, <%= w.getProvince()%><br>
+                <%= w.getPostalCode()%><br>
+                <br>
+            <% } %>
+            <p><b>Review IDs:</b></p>
+            <ul>
+                <% for (Object o : reviewIDs) {%>
+                    <li><a href="ReviewDetailServlet?rid=<%= (Integer) o%>"><%= (Integer) o%></a></li>
+                <% } %>
+            </ul>
+            
+            <% if (user.getAccountType() == user.getAccountType().Patient) {%>
+                <a href="WriteReviewFormServlet?doctor_alias=<%= doctorProfile.getDoctorAlias()%>">Write a review</a><br>
+                <a href="PatientProfileServlet">Profile</a>
+            <% }%>
+            <br><br>
+            <a href="LogoutServlet" class="btn btn-danger" role="button">Logout</a>
+        </div>
     </body>
 </html>

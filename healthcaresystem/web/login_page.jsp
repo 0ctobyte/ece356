@@ -27,7 +27,7 @@
         <% String login_msg = (String)request.getAttribute("login_msg"); %>
         <div class="bs-example">
             <div class="page-header">
-                <h1>Health Care System<small><h5> An ECE356 Database Design Project</h5></small></h1>
+                <h1>Health Care System<small><small> An ECE356 Database Design Project</small></small></h1>
             </div>
             <form name="login_form" action="LoginServlet" method="POST">
                 <div class="row">
