@@ -40,7 +40,6 @@
             </div>
             
             <h3><%= doctorProfile.getFirstName() + " " + doctorProfile.getLastName() %> <small><%= doctorProfile.getDoctorAlias() %></small></h3>
-            
             <br>
             <% if(user.getAccountType() == User.AccountType.Doctor) { %>
             <p><b>Email:</b>    <%= doctorProfile.getEmail() %></p>
