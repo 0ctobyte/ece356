@@ -40,6 +40,8 @@
                         <th>Alias</th>
                         <th>Province</th>
                         <th>City</th>
+                        <th>Reviews written</th>
+                        <th>Last review</th>
                         <th>Friend status</th>
                     </tr>
                     <% for(Integer i = 0; i < patientSearchResults.size(); ++i) {
@@ -59,6 +61,14 @@
                             <td><%= ps.getPatientAlias() %></td>
                             <td><%= ps.getProvince() %></td>
                             <td><%= ps.getCity() %></td>
+                            <td><%= ps.getNumReviews() %></td>
+                            <td>
+                                <% if(ps.getLastReview() != null) { %>
+                                    <%= ps.getLastReview() %>
+                                <% } else { %>
+                                    Never
+                                <% } %>
+                            </td>
                             <td>
                                 <% if(frStatus.equals("confirm")) { %>
                                     <a href="ConfirmFriendServlet?id=1&index=<%= i %>&friend_alias=<%= ps.getPatientAlias() %>">
