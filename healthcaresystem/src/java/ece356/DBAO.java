@@ -294,7 +294,7 @@ public class DBAO {
             }
             
             if (!keyword.isEmpty()){
-                filteredString += " AND comments COLLATE UTF8_GENERAL_CI LIKE ?";
+                filteredString += " AND LOWER(CONVERT(comments USING latin1)) LIKE LOWER(CONVERT(? USING latin1))";
             }
             
             String doctorSearchQuery = "SELECT DISTINCT doctor_alias, name_first, name_middle, name_last, gender, num_reviews, avg_rating" 
