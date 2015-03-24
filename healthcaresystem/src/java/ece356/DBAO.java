@@ -216,15 +216,15 @@ public class DBAO {
             }
 
             pdp = new DoctorProfile (
-                    resultSet.getString("PatientDoctorProfile.doctor_alias"),
+                    selected_doctor_alias,
                     null,
-                    resultSet.getString("PatientDoctorProfile.name_first"),
-                    resultSet.getString("PatientDoctorProfile.name_middle"),
-                    resultSet.getString("PatientDoctorProfile.name_last"),
-                    (resultSet.getString("PatientDoctorProfile.gender").equals("M")) ? DoctorProfile.Gender.M : DoctorProfile.Gender.F,
-                    resultSet.getInt("PatientDoctorProfile.num_years_licensed"),
-                    resultSet.getDouble("PatientDoctorProfile.avg_rating"),
-                    resultSet.getInt("PatientDoctorProfile.num_reviews")
+                    resultSet.getString("name_first"),
+                    resultSet.getString("name_middle"),
+                    resultSet.getString("name_last"),
+                    (resultSet.getString("gender").equals("M")) ? DoctorProfile.Gender.M : DoctorProfile.Gender.F,
+                    resultSet.getInt("num_years_licensed"),
+                    resultSet.getDouble("avg_rating"),
+                    resultSet.getInt("num_reviews")
             );
         } finally {
             if (pstmt != null) {
@@ -239,9 +239,8 @@ public class DBAO {
     }
     
     public static ArrayList<DoctorSearch> performDoctorSearch(String user_alias, String first_name,
-            String middle_name, String last_name, String gender, Integer num_years_licensed,
-            Integer street_number, String street_name, String postal_code, String city, 
-            String province, String specialization, Double avg_rating,
+            String last_name, String gender, String postal_code, String city, 
+            String province, String specialization, Integer num_years_licensed, Double avg_rating,
             Integer review_by_friend, String keyword)
         throws ClassNotFoundException, SQLException, NamingException {
         
@@ -255,93 +254,58 @@ public class DBAO {
                 
             // Construct a filtered string for the DB search.
             if (!first_name.isEmpty()) {
-                filteredString += " AND u.name_first LIKE ?";
-            }
-
-            if (!middle_name.isEmpty()) {
-                filteredString += " AND u.name_middle LIKE ?";
+                filteredString += " AND name_first LIKE ?";
             }
 
             if (!last_name.isEmpty()) {
-                filteredString += " AND u.name_last LIKE ?";
+                filteredString += " AND name_last LIKE ?";
             }
             
             if (!gender.isEmpty()){
-                filteredString += " AND d.gender = ?";
+                filteredString += " AND gender = ?";
             }
             
+            if (!postal_code.isEmpty()){
+                filteredString += " AND postal_code LIKE ?";
+            }
+            
+            if (!city.isEmpty()){
+                filteredString += " AND city LIKE ?";
+            }
+            
+            if (!province.isEmpty()){
+                filteredString += " AND province LIKE ?";
+            }
+            
+            if (!specialization.isEmpty()){
+                filteredString += " AND specialization_name LIKE ?";
+            }
+                        
             if (num_years_licensed != Integer.MIN_VALUE){
                 filteredString += " AND num_years_licensed >= ?";
             }
             
-            if (street_number != Integer.MIN_VALUE){
-                filteredString += " AND w.street_number = ?";
-            }
-            
-            if (!street_name.isEmpty()){
-                filteredString += " AND w.street_name LIKE ?";
-            }
-            
-            if (!postal_code.isEmpty()){
-                filteredString += " AND w.postal_code LIKE ?";
-            }
-            
-            if (!city.isEmpty()){
-                filteredString += " AND c.city LIKE ?";
-            }
-            
-            if (!province.isEmpty()){
-                filteredString += " AND c.province LIKE ?";
-            }
-            
-            if (!specialization.isEmpty()){
-                filteredString += " AND s.specialization_name LIKE ?";
-            }
-            
             if (avg_rating != Double.MIN_VALUE){
-                filteredString += " AND ar.avg_rating >= ?";
+                filteredString += " AND avg_rating >= ?";
             }
             
             if (review_by_friend != 0){
-                filteredString += " AND t.reviewed_by_friend = ?";
+                filteredString += " AND ((patient_alias = ? or friend_alias = ?) and reviewer_alias != ?)";
             }
             
             if (!keyword.isEmpty()){
-                filteredString += " AND t.comments COLLATE UTF8_GENERAL_CI LIKE ?";
+                filteredString += " AND LOWER(CONVERT(comments USING latin1)) LIKE LOWER(CONVERT(? USING latin1))";
             }
             
-            String doctorSearchQuery = "SELECT DISTINCT d.doctor_alias, d.num_years_licensed,"
-                    + " u.name_first, u.name_middle, u.name_last, d.gender,"
-                    + " ar.avg_rating, nr.num_reviews"
-                    + " FROM ((((((((SELECT *, (YEAR(current_timestamp)-license_year) "
-                    + " AS num_years_licensed FROM Doctor) AS d INNER JOIN User AS u"
-                    + " ON d.doctor_alias=u.user_alias) NATURAL JOIN"
-                    + " Specialization AS s) NATURAL JOIN WorkAddress as w)"
-                    + " NATURAL JOIN City AS c) NATURAL JOIN Province as p)"
-                    + " LEFT JOIN (SELECT AVG(star_rating) AS avg_rating,"
-                    + " doctor_alias FROM Review GROUP BY doctor_alias) AS ar"
-                    + " ON d.doctor_alias=ar.doctor_alias) INNER JOIN (SELECT"
-                    + " r.doctor_alias, r.comments, fr.accepted AS reviewed_by_friend"
-                    + " FROM Review AS r LEFT JOIN (SELECT * FROM FriendRequest"
-                    + " WHERE patient_alias=? OR friend_alias=?) AS fr ON"
-                    + " r.patient_alias=fr.patient_alias OR r.patient_alias=fr.friend_alias)"
-                    + " AS t ON t.doctor_alias=d.doctor_alias) LEFT JOIN (SELECT"
-                    + " doctor_alias, COUNT(DISTINCT review_id) AS num_reviews"
-                    + " FROM Review GROUP BY doctor_alias) AS nr ON"
-                    + " d.doctor_alias=nr.doctor_alias WHERE TRUE" + filteredString;
+            String doctorSearchQuery = "SELECT DISTINCT doctor_alias, name_first, name_middle, name_last, gender, num_reviews, avg_rating" 
+                                    +  " FROM DoctorFlexSearchView"
+                                    +  " WHERE TRUE" + filteredString;
             
             pstmt = con.prepareStatement(doctorSearchQuery);
 
             int num = 0;
-            pstmt.setString(++num, user_alias);
-            pstmt.setString(++num, user_alias);
-            
             if (!first_name.isEmpty()) {
                 pstmt.setString(++num, "%"+first_name+"%");
-            }
-
-            if (!middle_name.isEmpty()) {
-                pstmt.setString(++num, "%"+middle_name+"%");
             }
 
             if (!last_name.isEmpty()) {
@@ -350,18 +314,6 @@ public class DBAO {
             
             if (!gender.isEmpty()){
                 pstmt.setString(++num, gender);
-            }
-            
-            if (num_years_licensed != Integer.MIN_VALUE){
-                pstmt.setInt(++num, num_years_licensed);
-            }
-            
-            if (street_number != Integer.MIN_VALUE){
-                pstmt.setInt(++num, street_number);
-            }
-            
-            if (!street_name.isEmpty()){
-                pstmt.setString(++num, "%"+street_name+"%");
             }
             
             if (!postal_code.isEmpty()){
@@ -380,12 +332,18 @@ public class DBAO {
                 pstmt.setString(++num, "%"+specialization+"%");
             }
             
+            if (num_years_licensed != Integer.MIN_VALUE){
+                pstmt.setInt(++num, num_years_licensed);
+            }
+            
             if (avg_rating != Double.MIN_VALUE){
                 pstmt.setDouble(++num, avg_rating);
             }
             
             if (review_by_friend != 0){
-                pstmt.setInt(++num, review_by_friend);
+                pstmt.setString(++num, user_alias);
+                pstmt.setString(++num, user_alias);
+                pstmt.setString(++num, user_alias);
             }
             
             if (!keyword.isEmpty()){
@@ -402,13 +360,13 @@ public class DBAO {
             resultSet.beforeFirst();
             while (resultSet.next()) {
                 DoctorSearch ds = new DoctorSearch(
-                        resultSet.getString("d.doctor_alias"),
-                        resultSet.getString("u.name_first"),
-                        resultSet.getString("u.name_middle"),
-                        resultSet.getString("u.name_last"),
-                        resultSet.getString("d.gender"),
-                        resultSet.getInt("nr.num_reviews"),
-                        resultSet.getDouble("ar.avg_rating")
+                        resultSet.getString("doctor_alias"),
+                        resultSet.getString("name_first"),
+                        resultSet.getString("name_middle"),
+                        resultSet.getString("name_last"),
+                        resultSet.getString("gender"),
+                        resultSet.getInt("num_reviews"),
+                        resultSet.getDouble("avg_rating")
                 );
                 r.add(ds);
             }

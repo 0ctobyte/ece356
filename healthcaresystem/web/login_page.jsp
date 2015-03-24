@@ -30,23 +30,22 @@
                 <h1>Health Care System<small><small> An ECE356 Database Design Project</small></small></h1>
             </div>
             <form name="login_form" action="LoginServlet" method="POST">
-                <div class="row">
-                    <div class="col-xs-2">
-                        <label for="user_alias">Username</label>
-                        <input type="text" name="user_alias" class="form-control" id="user_alias"/><br>
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon">username</div>
+                        <input type="text" name="user_alias" class="form-control input-sm" />
+                    </div>
+                    <div class="input-group">
+                        <div class="input-group-addon">password</div>
+                        <input type="password" name="user_pwd" class="form-control input-sm" />
                     </div>
                 </div>
                 
-                <div class="row">
-                    <div class="col-xs-2">
-                    <label for="user_pwd">Password</label>
-                    <input type="password" name="user_pwd" class="form-control" is=""user_pwd/><br>
-                    </div>
-                </div>
                 <% if (login_msg != null) {%>
-                <%= login_msg%><br>
-                <% }%>
-                <input type="submit" value="Sign in" name="user_signin_button" class="btn btn-primary"/>
+                    <div class="alert alert-danger"><strong>Error!</strong> <%= login_msg %></div>
+                <% } %>
+                
+                <input type="submit" value="Sign in" class="btn btn-primary"/>
             </form> 
         </div>
     </body>

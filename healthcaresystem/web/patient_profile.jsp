@@ -31,22 +31,23 @@
             </div>
             <h3><%= patientProfile.getFirstName() + " " + patientProfile.getLastName()%> <small><%= patientProfile.getPatientAlias() %></small></h3>
             <br>
-            <p><b>Email:    </b><%= patientProfile.getEmail() %></p>
-            <p><b>Location:    </b><%= patientProfile.getCity() + ", " + patientProfile.getProvince() %></p>
-
-            <br>
-            <ul>
-                <li>
-                    <a href="ViewFriendRequestsServlet">View friend requests</a>
-                </li>
-                <li>
-                    <a href="PatientSearchFormServlet">Patient search</a>
-                </li>
-                <li>
-                    <a href="DoctorSearchFormServlet">Doctor search</a>
-                </li>
-            </ul>
-            <br><br>
+            <table class="table table-hover">
+                <tr>
+                    <th>Email</th>
+                    <th>City</th>
+                    <th>Province</th>
+                </tr>
+                <tr>
+                    <td><%= patientProfile.getEmail() %></td>
+                    <td><%= patientProfile.getCity() %></td>
+                    <td><%= patientProfile.getProvince() %></td>
+                </tr>
+            </table>
+            <ul class="list-inline">
+                <li><a href="ViewFriendRequestsServlet">View friend requests</a></li>
+                <li><a href="PatientSearchFormServlet">Patient search</a></li>
+                <li><a href="DoctorSearchFormServlet">Doctor search</a></li>
+            </ul><br>
             <a href="LogoutServlet" class="btn btn-danger" role="button">Logout</a>
         </div>
     </body>

@@ -32,35 +32,29 @@
             </div>
             <h3>Patient Search</h3>
             <br>
-            
             <form name="patient_search_form" action="PatientSearchServlet" method="POST">
-                <div class="row">
-                    <div class="col-xs-2">
-                        <label for="patient_search_alias">Patient Alias</label>
-                        <input type="text" name="patient_search_alias" value="" class="form-control input-sm" id="patient_search_alias" /><br>
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon">patient alias</div>
+                        <input type="text" name="patient_search_alias" value="" class="form-control input-sm" />
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-2">
-                        <label for="patient_search_city">City</label>
-                        <input type="text" name="patient_search_city" value="" class="form-control input-sm" id="patient_search_city" /><br>
+                    <div class="input-group">
+                        <div class="input-group-addon">city</div>
+                        <input type="text" name="patient_search_city" value="" class="form-control input-sm" />
                     </div>
+                    <select class="form-control input-sm" name="patient_search_province" >
+                        <option value="" disabled selected >province</option>
+                        <% for(Object o: provinces) {
+                            String province = (String)o;
+                        %>
+                            <option><%= province %></option>
+                        <% } %>
+                    </select>
                 </div>
-                <div class="row">
-                    <div class="col-xs-2">
-                        <label for="patient_search_province">Province</label>
-                        <select name="patient_search_province">
-                            <option></option>
-                            <% for(Object o: provinces) {
-                                String province = (String)o;
-                            %>
-                                <option><%= province %></option>
-                            <% } %>
-                        </select><br>
-                    </div>
+                
+                <div>
+                    <input type="submit" value="Search" class="btn btn-primary bt-xs"/>
                 </div>
-                <br>
-                <input type="submit" value="Search" name="patient_search_go" class="btn btn-primary bt-xs"/>
             </form>
             <br><br>
             <a href="PatientProfileServlet" class="btn btn-success" role="button">My Profile</a>
