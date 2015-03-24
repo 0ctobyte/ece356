@@ -44,7 +44,9 @@
         <% for(Object o: workAddresses) { 
             WorkAddress w = (WorkAddress)o;
         %>
-            Unit <%= w.getUnitNumber() %><br>
+            <% if(w.getUnitNumber() != 0) { %>
+                Unit <%= w.getUnitNumber() %><br>
+            <% } %>
             <%= w.getStreetNumber() %> <%= w.getStreetName() %><br>
             <%= w.getCity() %>, <%= w.getProvince() %><br>
             <%= w.getPostalCode() %><br>
