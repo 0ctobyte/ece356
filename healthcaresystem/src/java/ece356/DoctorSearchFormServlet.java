@@ -35,8 +35,10 @@ public class DoctorSearchFormServlet extends HttpServlet {
             if(user == null) throw new RuntimeException("Not logged in");
             if(user.getAccountType() != User.AccountType.Patient) throw new RuntimeException("Unauthorized Access");
             ArrayList<String> provinces = DBAO.getProvinces();
+            ArrayList<String> cities = DBAO.getCities();
             ArrayList<String> specializations = DBAO.getSpecializations();
             request.setAttribute("provinces", provinces);
+            request.setAttribute("cities", cities);
             request.setAttribute("specializations", specializations);
             url = "/doctor_search_form.jsp";
         } catch(Exception e) {

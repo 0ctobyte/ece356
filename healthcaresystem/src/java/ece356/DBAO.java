@@ -134,6 +134,41 @@ public class DBAO {
         return ret;
     }
     
+    public static ArrayList<String> getCities()
+            throws ClassNotFoundException, SQLException, NamingException {
+        
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ArrayList<String> ret = new ArrayList<>();
+
+        try {
+            con = getConnection();
+            String selectAllProvinces = "SELECT city FROM City";
+
+            pstmt = con.prepareStatement(selectAllProvinces);
+
+            ResultSet resultSet;
+            resultSet = pstmt.executeQuery();
+
+            if (!resultSet.first()) {
+                return ret;
+            }
+
+            resultSet.beforeFirst();
+            while (resultSet.next()) {
+                ret.add(resultSet.getString("city"));
+            }
+        } finally {
+            if (pstmt != null) {
+                pstmt.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+
+        return ret;
+    }
     
     public static void addFriendRequest(String patient_alias, String friend_alias)
         throws ClassNotFoundException, SQLException, NamingException

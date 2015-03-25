@@ -48,6 +48,7 @@ public class DoctorSearchServlet extends HttpServlet {
             if(gender == null) gender = "";
             if(specialization == null) specialization = "";
             if(province == null) province = "";
+            if(city == null) city = "";
             ArrayList<DoctorSearch> ds = (ArrayList<DoctorSearch>)DBAO.performDoctorSearch(user.getUserAlias(), fname, lname, gender, postal_code, city, province, specialization, num_years_licensed, avg_rating, reviewed_by_friend, keyword);
             request.setAttribute("doctorSearchResults", ds);
             url = "/doctor_search_result.jsp";

@@ -25,6 +25,7 @@
     </head>
     <body>
         <jsp:useBean id="provinces" class="java.util.ArrayList" scope="request"/>
+        <jsp:useBean id="cities" class="java.util.ArrayList" scope="request"/>
         <jsp:useBean id="specializations" class="java.util.ArrayList" scope="request"/>
         <jsp:useBean id="user" class="ece356.User" scope="session"/>
         <div class="bs-example">
@@ -87,10 +88,14 @@
                     <br>
                     <div class="row">
                         <div class="col-md-4">
-                            <div class="input-group">
-                                <div class="input-group-addon">city</div>
-                                <input type="text" class="form-control input-sm" name="doctor_search_city" value="" />
-                            </div>
+                            <select class="form-control input-sm" name="doctor_search_city">
+                                <option value="" disabled selected >city</option>
+                                <% for (Object o : cities) {
+                                        String city = (String) o;
+                                %>
+                                <option><%= city %></option>
+                                <% } %>
+                            </select>
                         </div>
                         <div class="col-md-4">
                             <select class="form-control input-sm" name="doctor_search_province">
