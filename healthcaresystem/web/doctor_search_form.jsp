@@ -28,6 +28,7 @@
         <jsp:useBean id="cities" class="java.util.ArrayList" scope="request"/>
         <jsp:useBean id="specializations" class="java.util.ArrayList" scope="request"/>
         <jsp:useBean id="user" class="ece356.User" scope="session"/>
+        <% String form_msg = (String)request.getAttribute("form_msg"); %>
         <div class="bs-example">
             <div class="page-header">
                 <h1>Health Care System <small><small>An ECE356 Database Design Project</small></small></h1>
@@ -131,6 +132,9 @@
                         reviewed by a friend?
                     </label>
                 </div>
+                <% if(form_msg != null) { %>
+                    <br><div class="alert alert-danger"><strong>Error!</strong> <%= form_msg %></div>
+                <% } %>
                 <div>
                     <input type="submit" value="Search" class="btn btn-primary bt-xs"/>
                 </div>

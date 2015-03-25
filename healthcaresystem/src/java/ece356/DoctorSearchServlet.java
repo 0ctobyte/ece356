@@ -34,21 +34,25 @@ public class DoctorSearchServlet extends HttpServlet {
         String fname = request.getParameter("doctor_search_fname");
         String lname = request.getParameter("doctor_search_lname");
         String gender = request.getParameter("doctor_search_gender");
-        Integer num_years_licensed = (request.getParameter("doctor_search_#yearslicensed").isEmpty()) ? Integer.MIN_VALUE : Integer.parseInt(request.getParameter("doctor_search_#yearslicensed"));
         String postal_code = request.getParameter("doctor_search_postal");
         String city = request.getParameter("doctor_search_city");
         String province = request.getParameter("doctor_search_province");
         String specialization = request.getParameter("doctor_search_specialization");
-        Double avg_rating = (request.getParameter("doctor_search_rating").isEmpty()) ? Double.MIN_VALUE : Double.parseDouble(request.getParameter("doctor_search_rating"));
-        Integer reviewed_by_friend = (request.getParameter("doctor_search_friendreviewed") == null) ? 0 : 1;
         String keyword = request.getParameter("doctor_search_keyword");
         try {
+            Integer num_years_licensed = (request.getParameter("doctor_search_#yearslicensed").isEmpty()) ? Integer.MIN_VALUE : Integer.parseInt(request.getParameter("doctor_search_#yearslicensed"));
+            Double avg_rating = (request.getParameter("doctor_search_rating").isEmpty()) ? Double.MIN_VALUE : Double.parseDouble(request.getParameter("doctor_search_rating"));
+            Integer reviewed_by_friend = (request.getParameter("doctor_search_friendreviewed") == null) ? 0 : 1;
             if(user == null) throw new RuntimeException("Not logged in");
             if(user.getAccountType() != User.AccountType.Patient) throw new RuntimeException("Unauthorized Access");
             if(gender == null) gender = "";
             if(specialization == null) specialization = "";
             if(province == null) province = "";
             if(city == null) city = "";
+            
+            if(avg_rating < 0 || avg_rating > 5) throw new RuntimeException("Invalid inputs");
+            if(num_years_licensed < 0) throw new RuntimeException("Invalid inputs");
+            
             ArrayList<DoctorSearch> ds = (ArrayList<DoctorSearch>)DBAO.performDoctorSearch(user.getUserAlias(), fname, lname, gender, postal_code, city, province, specialization, num_years_licensed, avg_rating, reviewed_by_friend, keyword);
             request.setAttribute("doctorSearchResults", ds);
             url = "/doctor_search_result.jsp";
@@ -60,6 +64,10 @@ public class DoctorSearchServlet extends HttpServlet {
                 url = "/unauthorized.jsp";
             } else if(e.getMessage().equals("Not logged in")) {
                 url = "/LoginServlet";
+            } else {
+                String form_msg = "One or more fields have invalid inputs!";
+                request.setAttribute("form_msg", form_msg);
+                url = "/DoctorSearchFormServlet";
             }
         }
         getServletContext().getRequestDispatcher(url).forward(request, response);
